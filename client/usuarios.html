@@ -220,7 +220,7 @@
                 <div class="stat-label">Total Tickets</div>
               </div>
               <div class="stat-item">
-                <div class="stat-value">5</div>
+                <div class="stat-value">12</div>
                 <div class="stat-label">Abiertos</div>
               </div>
             </div>
@@ -232,7 +232,43 @@
               <span class="completion-rate">82% completado</span>
             </div>
           </div>
-
+          <div class="user-card animate-in">
+            <div class="user-header">
+              <div class="user-avatar">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="var(--primary)"
+                >
+                  <path
+                    d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                  />
+                </svg>
+              </div>
+              <div class="user-info">
+                <h3>Maria Méndez</h3>
+                <span>Administración</span>
+              </div>
+            </div>
+            <div class="user-stats">
+              <div class="stat-item">
+                <div class="stat-value">32</div>
+                <div class="stat-label">Total Tickets</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">30</div>
+                <div class="stat-label">Abiertos</div>
+              </div>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 82%"></div>
+            </div>
+            <div class="progress-stats">
+              <span>Completados: 2</span>
+              <span class="completion-rate">82% completado</span>
+            </div>
+          </div>
           <div class="user-card animate-in">
             <div class="user-header">
               <div class="user-avatar">
@@ -263,7 +299,7 @@
               </div>
             </div>
             <div class="progress-bar">
-              <div class="progress-fill" style="width: 81%"></div>
+              <div class="progress-fill" style="width: 8"></div>
             </div>
             <div class="progress-stats">
               <span>Completados: 34</span>
@@ -278,6 +314,7 @@
       document.addEventListener("DOMContentLoaded", function () {
         const cards = document.querySelectorAll(".user-card");
         cards.forEach((card, index) => {
+          const rate = document.querySelectorAll(".completion-rate");
           card.style.animationDelay = `${index * 0.1}s`;
 
           const totalTickets = parseInt(
@@ -287,6 +324,7 @@
             card.querySelectorAll(".stat-value")[1].textContent
           );
           const completedTickets = totalTickets - openTickets;
+
           const completionPercentage = Math.round(
             (completedTickets / totalTickets) * 100
           );
@@ -295,9 +333,14 @@
           progressFill.style.width = `${completionPercentage}%`;
 
           if (completionPercentage < 50) {
+            rate[index].textContent = completionPercentage + "% completado";
+
             progressFill.style.backgroundColor = "var(--warning)";
+            rate[index].style.color = "var(--warning)";
           } else if (completionPercentage < 75) {
+            rate[index].textContent = completionPercentage + "% completado";
             progressFill.style.backgroundColor = "var(--secondary)";
+            rate[index].style.color = "var(--secondary)";
           }
 
           card.addEventListener("click", function () {

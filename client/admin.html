@@ -184,14 +184,6 @@
         <a href="/admin">Inicio</a>
         <a href="/tickets" onclick="showView('ticketsView')">Tickets</a>
         <a href="/users">Usuarios</a>
-        <a href="https://example.com/reports" onclick="showView('reportsView')"
-          >Reportes</a
-        >
-        <a
-          href="https://example.com/settings"
-          onclick="showView('settingsView')"
-          >Configuración</a
-        >
       </nav>
 
       <section id="ticketsView" class="view">
@@ -422,9 +414,9 @@
           }
         </div>
         <div class="admin-actions">
-          <button 
-            onclick="adminTicketSystem.toggleTicketStatus(${ticket.id})" 
-            class="btn btn-small" 
+          <button
+            onclick="adminTicketSystem.toggleTicketStatus(${ticket.id})"
+            class="btn btn-small"
             style="background: ${
               ticket.status === "open" ? "var(--success)" : "var(--warning)"
             }">
@@ -434,19 +426,33 @@
                 : "Reabrir Ticket"
             }
           </button>
-          <button 
-            onclick="adminTicketSystem.assignTicket(${ticket.id})" 
-            class="btn btn-small btn-assign">
+          ${
+            ticket.status === "closed"
+              ? ` <button
+            onclick="adminTicketSystem.assignTicket(${ticket.id})"
+            class=" hidden">
             Asignar
           </button>
-          <button 
-            onclick="adminTicketSystem.deleteTicket(${ticket.id})" 
-            class="btn btn-small btn-delete">
+          <button
+            onclick="adminTicketSystem.deleteTicket(${ticket.id})"
+            class=" hidden">
             Eliminar
           </button>
         </div>
-      </div>
-    `
+      </div>`
+              : ` <button
+            onclick="adminTicketSystem.assignTicket(${ticket.id})"
+            class="btn btn-small btn-assign ">
+            Asignar
+          </button>
+          <button
+            onclick="adminTicketSystem.deleteTicket(${ticket.id})"
+            class="btn btn-small btn-delete ">
+            Eliminar
+          </button>
+        </div>
+      </div>`
+          }`
             )
             .join("");
         }
