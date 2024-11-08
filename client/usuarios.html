@@ -1,0 +1,313 @@
+<html>
+  <head>
+    <title>SRT - Por Usuario</title>
+    <style>
+      :root {
+        --primary: #2c3e50;
+        --secondary: #3498db;
+        --success: #27ae60;
+        --warning: #f39c12;
+        --danger: #e74c3c;
+        --light: #ecf0f1;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      body {
+        background-color: #f5f6fa;
+      }
+      .header {
+        background: var(--primary);
+        color: white;
+        padding: 1rem;
+        text-align: center;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+      }
+      .banner {
+        background: var(--primary);
+        color: white;
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        max-width: 1200px;
+        margin: 0 auto;
+        border-radius: 0 0 10px 10px;
+      }
+
+      .nav-menu {
+        background: var(--secondary);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        display: flex;
+        gap: 1rem;
+      }
+
+      .nav-menu a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.3s;
+      }
+
+      .nav-menu a:hover {
+        color: var(--light);
+      }
+
+      .container {
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .users-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .user-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+      }
+
+      .user-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .user-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+      }
+
+      .user-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: var(--light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+      }
+
+      .user-info h3 {
+        color: var(--primary);
+        margin-bottom: 5px;
+      }
+
+      .user-stats {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        margin-top: 15px;
+      }
+
+      .stat-item {
+        background: var(--light);
+        padding: 10px;
+        border-radius: 5px;
+        text-align: center;
+      }
+
+      .stat-value {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: var(--primary);
+      }
+
+      .stat-label {
+        font-size: 0.8em;
+        color: #666;
+        text-transform: uppercase;
+      }
+
+      .progress-bar {
+        width: 100%;
+        height: 10px;
+        background: var(--light);
+        border-radius: 5px;
+        margin-top: 15px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: var(--success);
+        transition: width 0.3s ease;
+      }
+
+      .progress-stats {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 5px;
+        font-size: 0.8em;
+        color: #666;
+      }
+
+      .completion-rate {
+        color: var(--success);
+        font-weight: bold;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .animate-in {
+        animation: fadeIn 0.5s ease-out forwards;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>Tickets de Soporte</h1>
+      </header>
+
+      <nav class="nav-menu">
+        <a href="/admin">Inicio</a>
+        <a href="/tickets" onclick="showView('ticketsView')">Tickets</a>
+        <a href="/users">Usuarios</a>
+        <a onclick="showView('reportsView')">Reportes</a>
+        <a onclick="showView('settingsView')">Configuración</a>
+      </nav>
+
+      <div class="container">
+        <div class="users-container">
+          <div class="user-card animate-in">
+            <div class="user-header">
+              <div class="user-avatar">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="var(--primary)"
+                >
+                  <path
+                    d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                  />
+                </svg>
+              </div>
+              <div class="user-info">
+                <h3>Ana Martínez</h3>
+                <span>Soporte Técnico</span>
+              </div>
+            </div>
+            <div class="user-stats">
+              <div class="stat-item">
+                <div class="stat-value">28</div>
+                <div class="stat-label">Total Tickets</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">5</div>
+                <div class="stat-label">Abiertos</div>
+              </div>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 82%"></div>
+            </div>
+            <div class="progress-stats">
+              <span>Completados: 23</span>
+              <span class="completion-rate">82% completado</span>
+            </div>
+          </div>
+
+          <div class="user-card animate-in">
+            <div class="user-header">
+              <div class="user-avatar">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="var(--primary)"
+                >
+                  <path
+                    d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+                  />
+                </svg>
+              </div>
+              <div class="user-info">
+                <h3>Carlos López</h3>
+                <span>Desarrollador</span>
+              </div>
+            </div>
+            <div class="user-stats">
+              <div class="stat-item">
+                <div class="stat-value">42</div>
+                <div class="stat-label">Total Tickets</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-value">8</div>
+                <div class="stat-label">Abiertos</div>
+              </div>
+            </div>
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 81%"></div>
+            </div>
+            <div class="progress-stats">
+              <span>Completados: 34</span>
+              <span class="completion-rate">81% completado</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const cards = document.querySelectorAll(".user-card");
+        cards.forEach((card, index) => {
+          card.style.animationDelay = `${index * 0.1}s`;
+
+          const totalTickets = parseInt(
+            card.querySelector(".stat-value").textContent
+          );
+          const openTickets = parseInt(
+            card.querySelectorAll(".stat-value")[1].textContent
+          );
+          const completedTickets = totalTickets - openTickets;
+          const completionPercentage = Math.round(
+            (completedTickets / totalTickets) * 100
+          );
+
+          const progressFill = card.querySelector(".progress-fill");
+          progressFill.style.width = `${completionPercentage}%`;
+
+          if (completionPercentage < 50) {
+            progressFill.style.backgroundColor = "var(--warning)";
+          } else if (completionPercentage < 75) {
+            progressFill.style.backgroundColor = "var(--secondary)";
+          }
+
+          card.addEventListener("click", function () {
+            const userName = this.querySelector("h3").textContent;
+            console.log(
+              `Usuario: ${userName}, Porcentaje completado: ${completionPercentage}%`
+            );
+          });
+        });
+      });
+    </script>
+  </body>
+</html>

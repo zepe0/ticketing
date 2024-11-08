@@ -1,0 +1,413 @@
+<html>
+  <head>
+    <base href="." target="_blank" />
+    <title>Sistema de Tickets de Soporte - Admin</title>
+    <style>
+      :root {
+        --primary: #2c3e50;
+        --secondary: #3498db;
+        --success: #27ae60;
+        --warning: #f39c12;
+        --danger: #e74c3c;
+        --light: #ecf0f1;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: var(--light);
+        overflow-x: hidden; /* Prevent horizontal scrollbars */
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        height: 100vh; /* Full height to enable scrolling */
+      }
+
+      .header {
+        background: var(--primary);
+        color: white;
+        padding: 1rem;
+        text-align: center;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+      }
+
+      .nav-menu {
+        background: var(--secondary);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        display: flex;
+        gap: 1rem;
+      }
+
+      .nav-menu a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        transition: color 0.3s;
+      }
+
+      .nav-menu a:hover {
+        color: var(--light);
+      }
+
+      .ticket-section {
+        margin-top: 2rem;
+        height: calc(100vh - 200px); /* Adjust height for scrolling */
+        overflow-y: auto; /* Enable vertical scrolling for ticket list only */
+        scrollbar-width: thin; /* Firefox */
+        scrollbar-color: var(--secondary) var(--light); /* Firefox */
+      }
+
+      .ticket-section::-webkit-scrollbar {
+        width: 8px; /* Width of the scrollbar */
+      }
+
+      .ticket-section::-webkit-scrollbar-track {
+        background: var(--light);
+      }
+
+      .ticket-section::-webkit-scrollbar-thumb {
+        background-color: var(--secondary);
+        border-radius: 10px;
+      }
+
+      .ticket-list {
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .ticket-item {
+        background: white;
+        padding: 0.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .ticket-header {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .ticket-dropdown {
+        display: none;
+        background: var(--light);
+        border: 1px solid var(--secondary);
+        border-radius: 4px;
+        padding: 0.5rem;
+        position: absolute;
+        right: 0;
+        top: -5px;
+        z-index: 10;
+      }
+
+      .dropdown-button {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        font-size: 1.5rem;
+        color: var(--secondary);
+        position: absolute;
+        right: 10px;
+        top: 10px;
+      }
+
+      .dropdown-button:focus {
+        outline: none;
+      }
+
+      .dropdown-button:before {
+        content: "⋮";
+      }
+
+      .dropdown-button.open:before {
+        content: "▲"; /* Change to up arrow when open */
+      }
+
+      .dropdown-button.closed:before {
+        content: "▼"; /* Change to down arrow when closed */
+      }
+
+      .ticket-dropdown button {
+        display: block;
+        width: 100%;
+        background: transparent;
+        border: none;
+        text-align: left;
+        cursor: pointer;
+        padding: 0.5rem 0;
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        font-weight: bold;
+      }
+
+      .status-open {
+        background: var(--warning);
+        color: white;
+      }
+
+      .status-closed {
+        background: var(--success);
+        color: white;
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>Panel de Administración - Tickets de Soporte</h1>
+      </header>
+
+      <nav class="nav-menu">
+        <a href="/admin">Inicio</a>
+        <a href="/tickets" onclick="showView('ticketsView')">Tickets</a>
+        <a href="/users">Usuarios</a>
+        <a onclick="showView('reportsView')">Reportes</a>
+        <a onclick="showView('settingsView')">Configuración</a>
+      </nav>
+
+      <section id="ticketsView" class="view">
+        <h2>Todos los Tickets</h2>
+        <section class="ticket-section">
+          <ul class="ticket-list" id="ticketsList"></ul>
+        </section>
+      </section>
+
+      <section id="reportsView" class="view hidden">
+        <h2>Reportes de Tickets</h2>
+        <p>
+          Esta vista mostrará reportes analíticos sobre los tickets gestionados.
+        </p>
+      </section>
+
+      <section id="settingsView" class="view hidden">
+        <h2>Configuración del Sistema</h2>
+        <p>Aquí puedes modificar los parámetros del sistema de tickets.</p>
+      </section>
+    </div>
+
+    <script>
+      class AdminTicketSystem {
+        constructor() {
+          this.tickets = this.loadSampleData();
+          this.ticketsList = document.getElementById("ticketsList");
+
+          this.init();
+        }
+
+        loadSampleData() {
+          return [
+            {
+              id: 1,
+              title: "Problema de hardware",
+              description: "Falló el disco duro",
+              status: "open",
+              priority: "high",
+              department: "it",
+              createdAt: new Date().toLocaleDateString(),
+              assignee: null,
+            },
+            {
+              id: 2,
+              title: "Error en la aplicación",
+              description: "La aplicación se cierra inesperadamente",
+              status: "closed",
+              priority: "medium",
+              department: "it",
+              createdAt: new Date().toLocaleDateString(),
+              assignee: "Juan Perez",
+            },
+            {
+              id: 3,
+              title: "Solicitud de acceso",
+              description: "Acceso a la base de datos necesario",
+              status: "open",
+              priority: "low",
+              department: "finance",
+              createdAt: new Date().toLocaleDateString(),
+              assignee: null,
+            },
+            {
+              id: 4,
+              title: "Fallo en impresora",
+              description: "Impresora no responde",
+              status: "closed",
+              priority: "medium",
+              department: "maintenance",
+              createdAt: new Date().toLocaleDateString(),
+              assignee: "Maria Lopez",
+            },
+            {
+              id: 5,
+              title: "Actualización del sistema",
+              description: "Se requiere actualización urgente",
+              status: "open",
+              priority: "high",
+              department: "it",
+              createdAt: new Date().toLocaleDateString(),
+              assignee: null,
+            },
+            {
+              id: 6,
+              title: "Fallo en red",
+              description: "La conexión de red es inestable",
+              status: "open",
+              priority: "medium",
+              department: "it",
+              createdAt: new Date().toLocaleDateString(),
+              assignee: null,
+            },
+            {
+              id: 7,
+              title: "Problema de licencia",
+              description: "Licencia ha expirado",
+              status: "open",
+              priority: "low",
+              department: "finance",
+              createdAt: new Date().toLocaleDateString(),
+              assignee: null,
+            },
+          ];
+        }
+
+        init() {
+          this.renderTickets();
+          document.addEventListener("click", (event) => {
+            const isDropdownButton =
+              event.target.classList.contains("dropdown-button");
+            const isDropdown = event.target.closest(".ticket-dropdown");
+
+            // Close dropdown if clicked outside
+            if (!isDropdownButton && !isDropdown) {
+              this.closeAllDropdowns();
+            }
+          });
+        }
+
+        closeAllDropdowns() {
+          const dropdowns = document.querySelectorAll(".ticket-dropdown");
+          dropdowns.forEach((dropdown) => {
+            dropdown.style.display = "none";
+          });
+          const buttons = document.querySelectorAll(".dropdown-button.open");
+          buttons.forEach((button) => {
+            button.classList.remove("open");
+            button.classList.add("closed");
+          });
+        }
+
+        renderTickets() {
+          this.ticketsList.innerHTML = this.tickets
+            .map(
+              (ticket) => `
+      <li class="ticket-item priority-${ticket.priority}">
+        <div class="ticket-header">
+          <h3>${ticket.title}</h3>
+          <p>${ticket.description}</p>
+          <div style="margin-top: 1rem">
+            <span class="status-badge status-${
+              ticket.status
+            }">${ticket.status.toUpperCase()}</span>
+            <small style="margin-left: 1rem">Departamento: ${ticket.department.toUpperCase()}</small>
+            <small style="margin-left: 1rem">Creado: ${ticket.createdAt}</small>
+            ${
+              ticket.assignee
+                ? `<small style="margin-left: 1rem">Asignado a: ${ticket.assignee}</small>`
+                : ""
+            }
+          </div>
+        </div>
+        <button class="dropdown-button closed" onclick="toggleDropdown(${
+          ticket.id
+        }, this)"></button>
+        <div id="dropdown-${ticket.id}" class="ticket-dropdown">
+          <button onclick="adminTicketSystem.toggleTicketStatus(${
+            ticket.id
+          })">Marcar como Resuelto</button>
+          <button onclick="adminTicketSystem.assignTicket(${
+            ticket.id
+          })">Asignar</button>
+          <button onclick="adminTicketSystem.deleteTicket(${
+            ticket.id
+          })">Eliminar</button>
+        </div>
+      </li>
+    `
+            )
+            .join("");
+        }
+
+        deleteTicket(id) {
+          if (confirm("¿Estás seguro de que deseas eliminar este ticket?")) {
+            this.tickets = this.tickets.filter((t) => t.id !== id);
+            this.renderTickets();
+          }
+        }
+
+        assignTicket(id) {
+          const assignee = prompt("Ingrese el nombre del responsable:");
+          if (assignee) {
+            const ticket = this.tickets.find((t) => t.id === id);
+            if (ticket) {
+              ticket.assignee = assignee;
+              this.renderTickets();
+            }
+          }
+        }
+
+        toggleTicketStatus(id) {
+          const ticket = this.tickets.find((t) => t.id === id);
+          if (ticket) {
+            ticket.status = ticket.status === "open" ? "closed" : "open";
+            this.renderTickets();
+          }
+        }
+      }
+
+      const adminTicketSystem = new AdminTicketSystem();
+
+      function showView(viewId) {
+        const views = document.querySelectorAll(".view");
+        views.forEach((view) => {
+          view.classList.add("hidden");
+        });
+        document.getElementById(viewId).classList.remove("hidden");
+      }
+
+      function toggleDropdown(ticketId, button) {
+        const dropdown = document.getElementById(`dropdown-${ticketId}`);
+        dropdown.style.display =
+          dropdown.style.display === "block" ? "none" : "block";
+        button.classList.toggle("open");
+        button.classList.toggle("closed");
+      }
+
+      // Show the tickets view by default
+      showView("ticketsView");
+    </script>
+  </body>
+</html>
+```

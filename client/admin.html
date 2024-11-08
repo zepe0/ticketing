@@ -1,0 +1,469 @@
+<html>
+  <head>
+    <title>Sistema de Tickets de Soporte - Admin</title>
+    <style>
+      :root {
+        --primary: #2c3e50;
+        --secondary: #3498db;
+        --success: #27ae60;
+        --warning: #f39c12;
+        --danger: #e74c3c;
+        --light: #ecf0f1;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background: var(--light);
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .header {
+        background: var(--primary);
+        color: white;
+        padding: 1rem;
+        text-align: center;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+      }
+
+      .nav-menu {
+        background: var(--secondary);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+      }
+
+      .nav-menu a {
+        color: white;
+        text-decoration: none;
+        margin: 0 15px;
+        font-weight: bold;
+        transition: color 0.3s;
+      }
+
+      .nav-menu a:hover {
+        color: var(--light);
+      }
+
+      .stats-panel {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .stat-card {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .stat-card h3 {
+        color: var(--primary);
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-card p {
+        color: var(--secondary);
+      }
+
+      .admin-controls {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .filter-group {
+        flex: 1;
+      }
+
+      .ticket-card {
+        background: white;
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .ticket-card:hover {
+        transform: translateY(-2px);
+      }
+
+      .priority-high {
+        border-left: 4px solid var(--danger);
+      }
+
+      .priority-medium {
+        border-left: 4px solid var(--warning);
+      }
+
+      .priority-low {
+        border-left: 4px solid var(--success);
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        font-weight: bold;
+      }
+
+      .status-open {
+        background: var(--warning);
+        color: white;
+      }
+
+      .status-closed {
+        background: var(--success);
+        color: white;
+      }
+
+      .btn {
+        background: var(--secondary);
+        color: white;
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+      }
+
+      .btn:hover {
+        background: var(--primary);
+        transform: translateY(-2px);
+      }
+
+      .admin-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .btn-delete {
+        background: var(--danger);
+      }
+
+      .btn-assign {
+        background: var(--success);
+      }
+
+      .btn-small {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+      }
+
+      .hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>Panel de Administración - Tickets de Soporte</h1>
+      </header>
+
+      <nav class="nav-menu">
+        <a href="/admin">Inicio</a>
+        <a href="/tickets" onclick="showView('ticketsView')">Tickets</a>
+        <a href="/users">Usuarios</a>
+        <a href="https://example.com/reports" onclick="showView('reportsView')"
+          >Reportes</a
+        >
+        <a
+          href="https://example.com/settings"
+          onclick="showView('settingsView')"
+          >Configuración</a
+        >
+      </nav>
+
+      <section id="ticketsView" class="view">
+        <section class="stats-panel">
+          <div class="stat-card">
+            <h3 id="totalTickets">0</h3>
+            <p>Total Tickets</p>
+          </div>
+          <div class="stat-card">
+            <h3 id="openTickets">0</h3>
+            <p>Tickets Abiertos</p>
+          </div>
+          <div class="stat-card">
+            <h3 id="highPriority">0</h3>
+            <p>Alta Prioridad</p>
+          </div>
+          <div class="stat-card">
+            <h3 id="resolvedToday">0</h3>
+            <p>Resueltos Hoy</p>
+          </div>
+        </section>
+
+        <section class="admin-controls">
+          <div class="filter-group">
+            <label for="filterStatus">Estado</label>
+            <select id="filterStatus" class="form-control">
+              <option value="all">Todos</option>
+              <option value="open">Abiertos</option>
+              <option value="closed">Cerrados</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="filterPriority">Prioridad</label>
+            <select id="filterPriority" class="form-control">
+              <option value="all">Todas</option>
+              <option value="high">Alta</option>
+              <option value="medium">Media</option>
+              <option value="low">Baja</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label for="filterDepartment">Departamento</label>
+            <select id="filterDepartment" class="form-control">
+              <option value="all">Todos</option>
+              <option value="it">IT</option>
+              <option value="maintenance">Mantenimiento</option>
+              <option value="hr">Recursos Humanos</option>
+              <option value="finance">Finanzas</option>
+            </select>
+          </div>
+        </section>
+
+        <section class="tickets-list">
+          <h2>Gestión de Tickets</h2>
+          <div id="ticketsList"></div>
+        </section>
+      </section>
+
+      <section id="reportsView" class="view hidden">
+        <h2>Reportes de Tickets</h2>
+        <p>
+          Esta vista mostrará reportes analíticos sobre los tickets gestionados.
+        </p>
+        <div id="reportsContent">Contenido de los reportes aquí...</div>
+      </section>
+
+      <section id="settingsView" class="view hidden">
+        <h2>Configuración del Sistema</h2>
+        <p>Aquí puedes modificar los parámetros del sistema de tickets.</p>
+        <div id="settingsContent">Opciones de configuración aquí...</div>
+      </section>
+    </div>
+
+    <script>
+      class AdminTicketSystem {
+        constructor() {
+          this.tickets = this.loadSampleData();
+          this.ticketsList = document.getElementById("ticketsList");
+          this.filterStatus = document.getElementById("filterStatus");
+          this.filterPriority = document.getElementById("filterPriority");
+          this.filterDepartment = document.getElementById("filterDepartment");
+
+          this.init();
+        }
+
+        loadSampleData() {
+          return [
+            {
+              id: 1,
+              title: "Problema de hardware",
+              description: "Falló el disco duro",
+              status: "open",
+              priority: "high",
+              department: "it",
+              createdAt: new Date().toLocaleDateString(),
+              assignee: null,
+            },
+            {
+              id: 2,
+              title: "Error en la aplicación",
+              description: "La aplicación se cierra inesperadamente",
+              status: "closed",
+              priority: "medium",
+              department: "it",
+              createdAt: new Date().toLocaleDateString(),
+              assignee: "Juan Perez",
+            },
+            {
+              id: 3,
+              title: "Solicitud de acceso",
+              description: "Acceso a la base de datos necesario",
+              status: "open",
+              priority: "low",
+              department: "finance",
+              createdAt: new Date().toLocaleDateString(),
+              assignee: null,
+            },
+            {
+              id: 4,
+              title: "Fallo en impresora",
+              description: "Impresora no responde",
+              status: "closed",
+              priority: "medium",
+              department: "maintenance",
+              createdAt: new Date().toLocaleDateString(),
+              assignee: "Maria Lopez",
+            },
+          ];
+        }
+
+        init() {
+          this.filterStatus.addEventListener("change", () =>
+            this.renderTickets()
+          );
+          this.filterPriority.addEventListener("change", () =>
+            this.renderTickets()
+          );
+          this.filterDepartment.addEventListener("change", () =>
+            this.renderTickets()
+          );
+          this.renderTickets();
+          this.updateStats();
+        }
+
+        updateStats() {
+          document.getElementById("totalTickets").textContent =
+            this.tickets.length;
+          document.getElementById("openTickets").textContent =
+            this.tickets.filter((t) => t.status === "open").length;
+          document.getElementById("highPriority").textContent =
+            this.tickets.filter((t) => t.priority === "high").length;
+
+          const today = new Date().toLocaleDateString();
+          const resolvedToday = this.tickets.filter(
+            (t) =>
+              t.status === "closed" &&
+              new Date(t.createdAt).toLocaleDateString() === today
+          ).length;
+          document.getElementById("resolvedToday").textContent = resolvedToday;
+        }
+
+        deleteTicket(id) {
+          if (confirm("¿Estás seguro de que deseas eliminar este ticket?")) {
+            this.tickets = this.tickets.filter((t) => t.id !== id);
+            this.renderTickets();
+            this.updateStats();
+          }
+        }
+
+        assignTicket(id) {
+          const assignee = prompt("Ingrese el nombre del responsable:");
+          if (assignee) {
+            const ticket = this.tickets.find((t) => t.id === id);
+            if (ticket) {
+              ticket.assignee = assignee;
+              this.renderTickets();
+            }
+          }
+        }
+
+        toggleTicketStatus(id) {
+          const ticket = this.tickets.find((t) => t.id === id);
+          if (ticket) {
+            ticket.status = ticket.status === "open" ? "closed" : "open";
+            this.renderTickets();
+            this.updateStats();
+          }
+        }
+
+        filterTickets() {
+          let filtered = [...this.tickets];
+
+          const status = this.filterStatus.value;
+          const priority = this.filterPriority.value;
+          const department = this.filterDepartment.value;
+
+          if (status !== "all") {
+            filtered = filtered.filter((t) => t.status === status);
+          }
+          if (priority !== "all") {
+            filtered = filtered.filter((t) => t.priority === priority);
+          }
+          if (department !== "all") {
+            filtered = filtered.filter((t) => t.department === department);
+          }
+
+          return filtered;
+        }
+
+        renderTickets() {
+          const filteredTickets = this.filterTickets();
+          this.ticketsList.innerHTML = filteredTickets
+            .map(
+              (ticket) => `
+      <div class="ticket-card priority-${ticket.priority}">
+        <h3>${ticket.title}</h3>
+        <p>${ticket.description}</p>
+        <div style="margin-top: 1rem">
+          <span class="status-badge status-${
+            ticket.status
+          }">${ticket.status.toUpperCase()}</span>
+          <small style="margin-left: 1rem">Departamento: ${ticket.department.toUpperCase()}</small>
+          <small style="margin-left: 1rem">Creado: ${ticket.createdAt}</small>
+          ${
+            ticket.assignee
+              ? `<small style="margin-left: 1rem">Asignado a: ${ticket.assignee}</small>`
+              : ""
+          }
+        </div>
+        <div class="admin-actions">
+          <button 
+            onclick="adminTicketSystem.toggleTicketStatus(${ticket.id})" 
+            class="btn btn-small" 
+            style="background: ${
+              ticket.status === "open" ? "var(--success)" : "var(--warning)"
+            }">
+            ${
+              ticket.status === "open"
+                ? "Marcar como Resuelto"
+                : "Reabrir Ticket"
+            }
+          </button>
+          <button 
+            onclick="adminTicketSystem.assignTicket(${ticket.id})" 
+            class="btn btn-small btn-assign">
+            Asignar
+          </button>
+          <button 
+            onclick="adminTicketSystem.deleteTicket(${ticket.id})" 
+            class="btn btn-small btn-delete">
+            Eliminar
+          </button>
+        </div>
+      </div>
+    `
+            )
+            .join("");
+        }
+      }
+
+      const adminTicketSystem = new AdminTicketSystem();
+
+      function showView(viewId) {
+        const views = document.querySelectorAll(".view");
+        views.forEach((view) => {
+          view.classList.add("hidden");
+        });
+        document.getElementById(viewId).classList.remove("hidden");
+      }
+
+      // Show the tickets view by default
+      showView("ticketsView");
+    </script>
+  </body>
+</html>
