@@ -22,11 +22,12 @@ io.on("connection", (socket) => {
   });
 });
 
-app.get("/", (req, res) => {
-  res.sendFile(process.cwd() + "/client/index.html");
-});
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
+});
+
+app.get("/", (req, res) => {
+  res.sendFile(process.cwd() + "/client/index.html");
 });
 
 app.get("/admin", (req, res) => {
@@ -38,4 +39,7 @@ app.get("/tickets", (req, res) => {
 
 app.get("/users", (req, res) => {
   res.sendFile(process.cwd() + "/client/usuarios.html");
+});
+app.get("/newticket", (req, res) => {
+  res.sendFile(process.cwd() + "/client/formclient.html");
 });
