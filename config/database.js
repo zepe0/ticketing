@@ -1,6 +1,7 @@
 import { createClient } from "@libsql/client";
+import { loadEnv } from "./env.js";
 
-/* process.loadEnvFile(".env"); */
+loadEnv()
 
 export const db = createClient({
   url: "libsql://firm-katana-zepe0.turso.io",
