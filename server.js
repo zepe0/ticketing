@@ -6,8 +6,7 @@ import { loadEnv } from "./config/env.js"; // Cargar .env en modo dev
 import chatController from "./controllers/chatController.js";
 import viewRoutes from "./routes/views.js";
 
-// Carga variables de entorno en desarrollo
-loadEnv();
+
 
 const port = process.env.PORT ?? 3000;
 const app = express();
