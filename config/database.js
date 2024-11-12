@@ -3,6 +3,7 @@ import { loadEnv } from "./env.js";
 
 loadEnv()
 
+
 export const db = createClient({
   url: "libsql://firm-katana-zepe0.turso.io",
   authToken: process.env.DB_TOKEN,
