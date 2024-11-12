@@ -2,7 +2,12 @@ import express from "express";
 import { Server } from "socket.io";
 import { createServer } from "node:http";
 import { createClient } from "@libsql/client";
-/* process.loadEnvFile('.env'); */
+/*
+Activar solo en modo dev
+
+process.loadEnvFile('.env');
+
+*/
 
 // Renombrados //
 const port = process.env.PORT ?? 3000;
