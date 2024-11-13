@@ -16,5 +16,8 @@ router.get("/users", (req, res) =>
 router.get("/newticket", (req, res) =>
   res.sendFile(process.cwd() + "/client/formclient.html")
 );
+router.get("/singup", (req, res) =>
+  res.sendFile(process.cwd() + "/client/register.html")
+);
 
 export default router;

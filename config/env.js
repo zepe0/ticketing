@@ -1,5 +1,11 @@
 import fs from "fs-extra";
-
+/**
+ * 
+ * 
+ * Verifica si el archivo `.env` existe en el directorio raíz.
+ * Si existe y el entorno no es de producción (`NODE_ENV !== "production"`),
+ * lo carga para utilizar las variables de entorno definidas en dicho archivo.
+ */
 export function loadEnv() {
   // Verificar si el archivo .env existe
   
