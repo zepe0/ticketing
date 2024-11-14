@@ -24,10 +24,10 @@ function redirectToApp() {
       "https://play.google.com/store/apps/details?id=com.app.cityvitae&hl=es_419&pli=1";
   } else {
     const osin = document.getElementById("os");
-    osin.innerText =
-      "No disponemos actualmente de una aplicación para tu sistema operativo de " +
-      os +
-      ".";
+    osin.innerHTML = `<p class="center content">No disponemos actualmente de una aplicación para tu sistema operativo de
+      ${os}. 
+      <br>
+      te dejamos las dos plataformas donde puedes descargar la aplicación.</p> `;
   }
 }
 redirectToApp();

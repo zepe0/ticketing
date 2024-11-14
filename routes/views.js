@@ -24,6 +24,32 @@ router.get("/", (req, res) =>
 router.get("/download", (req, res) =>
   res.sendFile(process.cwd() + "/client/download.html")
 );
+
+
+router.use(
+  "/client/css",
+  express.static(path.join(process.cwd(), "client/css"), {
+    setHeaders: function (res, path) {
+      if (path.endsWith(".css")) {
+        res.setHeader("Content-Type", "text/css");
+      }
+    },
+  })
+);
+router.use(
+  "/img",
+  express.static(path.join(process.cwd(), "/img"), {
+    setHeaders: function (res, path) {
+      if (path.endsWith(".jpg")) {
+        res.setHeader("Content-Type", "image/jpeg");
+      } else if (path.endsWith(".png")) {
+        res.setHeader("Content-Type", "image/png");
+      } else if (path.endsWith(".gif")) {
+        res.setHeader("Content-Type", "image/gif");
+      }
+    },
+  })
+);
 router.use(
   "/client/js",
   express.static(path.join(process.cwd(), "client/js"), {
