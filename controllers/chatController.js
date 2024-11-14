@@ -5,6 +5,7 @@ export default function chatController(io) {
     socket.on("disconnect", () => {});
 
     socket.on("chat", async (msg) => {
+      debugger
       let result;
       try {
         result = await db.execute({

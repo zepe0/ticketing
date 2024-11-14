@@ -3,7 +3,7 @@ const router = express();
 import path from "path";
 import { fileURLToPath } from "url";
 
-router.get("/chat", (req, res) =>
+router.get("/", (req, res) =>
   res.sendFile(process.cwd() + "/client/index.html")
 );
 router.get("/admin", (req, res) =>
@@ -18,13 +18,12 @@ router.get("/users", (req, res) =>
 router.get("/newticket", (req, res) =>
   res.sendFile(process.cwd() + "/client/formclient.html")
 );
-router.get("/", (req, res) =>
+router.get("/1", (req, res) =>
   res.sendFile(process.cwd() + "/client/register.html")
 );
 router.get("/download", (req, res) =>
   res.sendFile(process.cwd() + "/client/download.html")
 );
-
 
 router.use(
   "/client/css",
