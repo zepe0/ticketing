@@ -2,11 +2,7 @@ import { db } from "../config/database.js";
 
 export default function chatController(io) {
   io.on("connection", (socket) => {
-    console.log("Usuario Conectado");
-
-    socket.on("disconnect", () => {
-      console.log("Usuario Desconectado");
-    });
+    socket.on("disconnect", () => {});
 
     socket.on("chat", async (msg) => {
       let result;

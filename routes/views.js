@@ -1,7 +1,7 @@
 import express from "express";
 const router = express();
 
-router.get("/", (req, res) =>
+router.get("/chat", (req, res) =>
   res.sendFile(process.cwd() + "/client/index.html")
 );
 router.get("/admin", (req, res) =>
@@ -16,7 +16,7 @@ router.get("/users", (req, res) =>
 router.get("/newticket", (req, res) =>
   res.sendFile(process.cwd() + "/client/formclient.html")
 );
-router.get("/singup", (req, res) =>
+router.get("/", (req, res) =>
   res.sendFile(process.cwd() + "/client/register.html")
 );
 

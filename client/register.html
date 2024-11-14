@@ -4,24 +4,35 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Registro</title>
-    <link rel="stylesheet"  href="css/register.css" />
+    <link rel="stylesheet" href="css/register.css" />
     <script type="module" src="js/resgister.js"></script>
   </head>
   <body>
     <section id="registro">
       <h1>Registro</h1>
       <form id="form">
-        <input id="name" type="text" placeholder="Nombre" autocomplete="off" />
-        <input id="email" type="text" placeholder="Email" autocomplete="off" />
+        <input
+          id="Nombre"
+          type="text"
+          placeholder="Nombre"
+          autocomplete="off"
+        />
+        <input
+          id="mailNewUser"
+          type="text"
+          placeholder="Email"
+          autocomplete="off"
+        />
         <input
           id="pws"
           type="password"
           placeholder="Contraseña"
-          autocomplete="off"
+          autocomplete="new-password"
         />
         <button type="submit">Enviar</button>
       </form>
       <small> Ya tienes cuenta <a href="/login">Entra ➡ </a></small>
+      <small> Entrar con <a href="/admin">Demo ➡ </a></small>
     </section>
   </body>
 </html>
