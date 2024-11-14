@@ -5,6 +5,7 @@ const form = document.getElementById("form");
 const input = document.getElementById("input");
 const msn = document.getElementById("msn");
 
+
 socket.on("login", (msg) => {
   const item = `<li>${msg}</li>`;
   msn.insertAdjacentHTML("beforeend", item);

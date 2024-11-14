@@ -1,5 +1,7 @@
 import express from "express";
 const router = express();
+import path from "path";
+import { fileURLToPath } from "url";
 
 router.get("/chat", (req, res) =>
   res.sendFile(process.cwd() + "/client/index.html")
@@ -18,6 +20,19 @@ router.get("/newticket", (req, res) =>
 );
 router.get("/", (req, res) =>
   res.sendFile(process.cwd() + "/client/register.html")
+);
+router.get("/download", (req, res) =>
+  res.sendFile(process.cwd() + "/client/download.html")
+);
+router.use(
+  "/client/js",
+  express.static(path.join(process.cwd(), "client/js"), {
+    setHeaders: function (res, path) {
+      if (path.endsWith(".js")) {
+        res.setHeader("Content-Type", "application/javascript");
+      }
+    },
+  })
 );
 
 export default router;
