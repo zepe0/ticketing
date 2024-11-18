@@ -20,7 +20,7 @@ db.connect = async () => {
   await db.execute(`
     CREATE TABLE IF NOT EXISTS user (
       uid TEXT PRIMARY KEY ,
-      nombre TEXT NOT NULL,
+      nombre TEXT ,
       email TEXT UNIQUE NOT NULL,
       pws TEXT NOT NULL
     )

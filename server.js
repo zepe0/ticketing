@@ -1,4 +1,4 @@
-import express from "express";
+import express, { json } from "express";
 import { Server } from "socket.io";
 import { createServer } from "node:http";
 import { db } from "./config/database.js";
@@ -8,6 +8,8 @@ import chatController from "./controllers/chatController.js";
 import viewRoutes from "./routes/views.js";
 import { loadEnv } from "./config/env.js";
 import userController from "./controllers/userController.js";
+import User_register from "./controllers/User_register.js";
+import { error } from "node:console";
 
 loadEnv();
 
@@ -21,8 +23,18 @@ const io = new Server(server, {
 db.connect();
 chatController(io);
 userController(io);
+app.use(express.json());
 // Rutas de vistas
 app.use("/", viewRoutes);
+app.post("/register", async (req, res) => {
+  const { email,  password } = req.body;
+  try {
+    await User_register({ email,password });
+    res.status(201).json({ message: "Usuario registrado correctamente" });
+  } catch (error) {
+    res.status(501).json(error);
+  }
+});
 app.use(
   express.static(path.join(process.cwd(), "client"), {
     setHeaders: (res, filePath) => {
