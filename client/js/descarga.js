@@ -17,17 +17,29 @@ function getOS() {
 }
 function redirectToApp() {
   var os = getOS();
-  if (os === "iOS") {
-    window.location.href = "itms-apps://apps.apple.com/es/app/cityvitae";
+  const osin = document.getElementById("os");
+  let secondsLeft = 5;
+
+  if (os === "iOS" || os === "Mac OS") {
+    const interval = setInterval(() => {
+      if (secondsLeft <= 0) {
+        clearInterval(interval);
+        window.location.href = "itms-apps://apps.apple.com/es/app/cityvitae";
+      }
+    }, 1000);
   } else if (os === "Android") {
-    window.location.href =
-      "https://play.google.com/store/apps/details?id=com.app.cityvitae&hl=es_419&pli=1";
+    const interval = setInterval(() => {
+      secondsLeft--;
+
+      if (secondsLeft <= 0) {
+        clearInterval(interval);
+
+        window.location.href =
+          "https://play.google.com/store/apps/details?id=com.app.cityvitae&hl=es_419&pli=1";
+      }
+    }, 1000);
   } else {
-    const osin = document.getElementById("os");
-    osin.innerHTML = `<p class="center ">No disponemos actualmente de una aplicación para tu sistema operativo de
-      ${os}. 
-      <br> <br> Están disponible  ⤵ 
-      </p>`;
+    window.location.href = "https://cityvitae.com";
   }
 }
 redirectToApp();
