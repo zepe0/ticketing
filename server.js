@@ -32,7 +32,7 @@ app.post("/register", async (req, res) => {
     await User_register({ email,password });
     res.status(201).json({ message: "Usuario registrado correctamente" });
   } catch (error) {
-    res.status(501).json(error);
+    res.status(501).json(error.message);
   }
 });
 app.use(
