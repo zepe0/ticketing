@@ -17,8 +17,8 @@ function getOS() {
 }
 function redirectToApp() {
   var os = getOS();
-  const osin = document.getElementById("os");
-  let secondsLeft = 5;
+ 
+  let secondsLeft = 3;
 
   if (os === "iOS" || os === "Mac OS") {
     const interval = setInterval(() => {
