@@ -22,6 +22,7 @@ function redirectToApp() {
 
   if (os === "iOS" || os === "Mac OS") {
     const interval = setInterval(() => {
+      secondsLeft--;
       if (secondsLeft <= 0) {
         clearInterval(interval);
         window.location.href =
