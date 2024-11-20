@@ -140,6 +140,17 @@
       .dropdown-button.closed:before {
         content: "▼"; /* Change to down arrow when closed */
       }
+      .priority-alta {
+        border-left: 4px solid var(--danger);
+      }
+
+      .priority-media {
+        border-left: 4px solid var(--warning);
+      }
+
+      .priority-baja {
+        border-left: 4px solid var(--success);
+      }
 
       .ticket-dropdown button {
         display: block;
@@ -159,12 +170,12 @@
         font-weight: bold;
       }
 
-      .status-open {
+      .status-abierto {
         background: var(--warning);
         color: white;
       }
 
-      .status-closed {
+      .status-cerrado {
         background: var(--success);
         color: white;
       }
@@ -219,20 +230,20 @@
           fetch("/api/tickets")
             .then((response) => response.json())
             .then((data) => {
-              this.tickets = data.rows;
-              if (data.rows.length === 0) {
+              console.log("Tickets loaded:", data);
+              this.tickets = data;
+              if (data.length === 0) {
                 ticketsList.innerHTML = `<li class="ticket-item">No hay tickets disponibles</li>`;
-              }else{
+              } else {
                 this.renderTickets();
               }
-             
             })
             .catch((error) => {
               console.error("Error loading tickets:", error);
             });
         }
 
-      /*   init() {
+        /*   init() {
           this.renderTickets();
           document.addEventListener("click", (event) => {
             const isDropdownButton =
@@ -262,20 +273,20 @@
           this.ticketsList.innerHTML = this.tickets
             .map(
               (ticket) => `
-      <li class="ticket-item priority-${ticket[0]}">
+      <li class="ticket-item priority-${ticket.prioridad}">
         <div class="ticket-header">
-          <h3>${ticket[2]}</h3>
-          <p>${ticket[3]}</p>
+          <h3>${ticket.titulo}</h3>
+          <p>${ticket.email}</p>
           <div style="margin-top: 1rem">
             <span class="status-badge status-${
-              ticket.status
-            }">${ticket[5].toUpperCase()}</span>
-            <small style="margin-left: 1rem">Departamento: ${ticket[1].toUpperCase()}</small>
-            <small style="margin-left: 1rem">Creado: ${ticket[4]}</small>
+              ticket.estado
+            }">${ticket.estado.toUpperCase()}</span>
+            <small style="margin-left: 1rem">Departamento: ${ticket.departamento.toUpperCase()}</small>
+            <small style="margin-left: 1rem">Creado: ${ticket.creado}</small>
             ${
               ticket.assignee
-                ? `<small style="margin-left: 1rem">Asignado a: ${ticket.assignee}</small>`
-                : ""
+                ? `<small style="margin-left: 1rem">Asignado a: ${ticket.asignado}</small>`
+                : `<small style="margin-left: 1rem">Asignado a:  ---</small>`
             }
           </div>
         </div>

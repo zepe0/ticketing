@@ -1,6 +1,5 @@
 <html>
   <head>
-   
     <title>Sistema de Tickets de Soporte</title>
     <style>
       :root {
@@ -177,55 +176,92 @@
               <option value="finance">Finanzas</option>
             </select>
           </div>
-
+          <form id="email">
+            <div class="form-group">
+              <label for="title">email de contacto</label>
+              <input
+                type="text"
+                id="email"
+                required
+                placeholder="tickets@gmail.com"
+              />
+            </div>
           <button type="submit" class="btn">Crear Ticket</button>
         </form>
       </section>
 
       <section class="tickets-list">
         <h2>Tickets Activos</h2>
-        <div id="ticketsList">
-
-        </div>       
+        <div id="ticketsList"></div>
       </section>
     </div>
 
     <script>
       class TicketSystem {
         constructor() {
-          this.tickets = JSON.parse(localStorage.getItem("tickets")) || [];
+          
           this.form = document.getElementById("newTicketForm");
           this.ticketsList = document.getElementById("ticketsList");
 
           this.init();
         }
 
-        init() {
+       async init() {
+        await this.loadTickets();
           this.form.addEventListener("submit", (e) => this.handleSubmit(e));
           this.renderTickets();
         }
+async loadTickets() {
+      try {
+        const response = await fetch("/api/tickets", {
+          method: "get",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const data = await response.json();
+        this.tickets = data;
+        
+      } catch (error) {
+        console.error("Error:", error);
+        this.tickets = [];
+      }
+    }
 
         handleSubmit(e) {
           e.preventDefault();
 
           const ticket = {
-            id: Date.now(),
-            title: document.getElementById("title").value,
-            description: document.getElementById("description").value,
-            priority: document.getElementById("priority").value,
-            department: document.getElementById("department").value,
-            status: "open",
-            createdAt: new Date().toLocaleString(),
+            titulo: document.getElementById("title").value,
+            des: document.getElementById("description").value,
+            prioridad: document.getElementById("priority").value,
+            departamento: document.getElementById("department").value,
+            email: document.getElementById("email").value,
+            estado: "open",
           };
 
           this.tickets.unshift(ticket);
-          this.saveTickets();
+          this.saveTickets(ticket);
           this.renderTickets();
           this.form.reset();
         }
 
-        saveTickets() {
-          localStorage.setItem("tickets", JSON.stringify(this.tickets));
+        saveTickets(ticket) {
+          fetch("/api/newticket", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+
+            body: JSON.stringify(ticket),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("Success:", data);
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
         }
 
         toggleTicketStatus(id) {
@@ -241,24 +277,24 @@
           this.ticketsList.innerHTML = this.tickets
             .map(
               (ticket) => `
-        <div class="ticket-card priority-${ticket.priority}">
-          <h3>${ticket.title}</h3>
-          <p>${ticket.description}</p>
+        <div class="ticket-card priority-${ticket.prioridad}">
+          <h3>${ticket.titulo}</h3>
+          <p>${ticket.des}</p>
           <div style="margin-top: 1rem">
             <span class="status-badge status-${
-              ticket.status
-            }">${ticket.status.toUpperCase()}</span>
-            <small style="margin-left: 1rem">Departamento: ${ticket.department.toUpperCase()}</small>
-            <small style="margin-left: 1rem">Creado: ${ticket.createdAt}</small>
+              ticket.estado
+            }">${ticket.estado}</span>
+            <small style="margin-left: 1rem">Departamento: ${ticket.departamento.toUpperCase()}</small>
+            <small style="margin-left: 1rem">Creado: ${ticket.creado}</small>
           </div>
-          <button 
-            onclick="ticketSystem.toggleTicketStatus(${ticket.id})" 
-            class="btn" 
+          <button
+            onclick="ticketSystem.toggleTicketStatus(${ticket.uid})"
+            class="btn"
             style="margin-top: 1rem; background: ${
-              ticket.status === "open" ? "var(--success)" : "var(--warning)"
+              ticket.estado === "abiero" ? "var(--success)" : "var(--warning)"
             }">
             ${
-              ticket.status === "open"
+              ticket.estado === "abiero"
                 ? "Marcar como Resuelto"
                 : "Reabrir Ticket"
             }

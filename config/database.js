@@ -25,16 +25,19 @@ db.connect = async () => {
       pws TEXT NOT NULL
     )
   `);
-
+  /*  FOREIGN KEY (uid) REFERENCES user(uid) */
   await db.execute(`
     CREATE TABLE IF NOT EXISTS tickets (
       uid TEXT PRIMARY KEY ,
       departamento TEXT ,
-      email TEXT UNIQUE NOT NULL,
+      email TEXT NOT NULL,
       des NOT NULL,
       creado date default current_date,
       estado TEXT NOT NULL,
-      prioridad TEXT NOT NULL
+      prioridad TEXT NOT NULL,
+      asignado TEXT,
+      titulo TEXT
+  
     )
   `);
   const uid = generateUID();
@@ -48,7 +51,7 @@ db.connect = async () => {
     },
   });
   await db.execute({
-    sql: "INSERT  OR IGNORE INTO tickets (uid,departamento,email,des, estado,prioridad) VALUES (:uid,:departamento,:email,:des,:estado,:prioridad)",
+    sql: "INSERT  OR IGNORE INTO tickets (uid,departamento,email,des, estado,prioridad,titulo) VALUES (:uid,:departamento,:email,:des,:estado,:prioridad,:titulo)",
     args: {
       uid: uid,
       departamento: "IT",
@@ -57,6 +60,7 @@ db.connect = async () => {
       email: "demo@demo",
       des: "demo",
       email: "demo@demo",
+      titulo: "demo se rompe",
     },
   });
 
