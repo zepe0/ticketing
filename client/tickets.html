@@ -212,85 +212,27 @@
           this.tickets = this.loadSampleData();
           this.ticketsList = document.getElementById("ticketsList");
 
-          this.init();
+          /* this.init(); */
         }
 
         loadSampleData() {
-          return [
-            {
-              id: 1,
-              title: "Problema de hardware",
-              description: "Falló el disco duro",
-              status: "open",
-              priority: "high",
-              department: "it",
-              createdAt: new Date().toLocaleDateString(),
-              assignee: null,
-            },
-            {
-              id: 2,
-              title: "Error en la aplicación",
-              description: "La aplicación se cierra inesperadamente",
-              status: "closed",
-              priority: "medium",
-              department: "it",
-              createdAt: new Date().toLocaleDateString(),
-              assignee: "Juan Perez",
-            },
-            {
-              id: 3,
-              title: "Solicitud de acceso",
-              description: "Acceso a la base de datos necesario",
-              status: "open",
-              priority: "low",
-              department: "finance",
-              createdAt: new Date().toLocaleDateString(),
-              assignee: null,
-            },
-            {
-              id: 4,
-              title: "Fallo en impresora",
-              description: "Impresora no responde",
-              status: "closed",
-              priority: "medium",
-              department: "maintenance",
-              createdAt: new Date().toLocaleDateString(),
-              assignee: "Maria Lopez",
-            },
-            {
-              id: 5,
-              title: "Actualización del sistema",
-              description: "Se requiere actualización urgente",
-              status: "open",
-              priority: "high",
-              department: "it",
-              createdAt: new Date().toLocaleDateString(),
-              assignee: null,
-            },
-            {
-              id: 6,
-              title: "Fallo en red",
-              description: "La conexión de red es inestable",
-              status: "open",
-              priority: "medium",
-              department: "it",
-              createdAt: new Date().toLocaleDateString(),
-              assignee: null,
-            },
-            {
-              id: 7,
-              title: "Problema de licencia",
-              description: "Licencia ha expirado",
-              status: "open",
-              priority: "low",
-              department: "finance",
-              createdAt: new Date().toLocaleDateString(),
-              assignee: null,
-            },
-          ];
+          fetch("/api/tickets")
+            .then((response) => response.json())
+            .then((data) => {
+              this.tickets = data.rows;
+              if (data.rows.length === 0) {
+                ticketsList.innerHTML = `<li class="ticket-item">No hay tickets disponibles</li>`;
+              }else{
+                this.renderTickets();
+              }
+             
+            })
+            .catch((error) => {
+              console.error("Error loading tickets:", error);
+            });
         }
 
-        init() {
+      /*   init() {
           this.renderTickets();
           document.addEventListener("click", (event) => {
             const isDropdownButton =
@@ -302,7 +244,7 @@
               this.closeAllDropdowns();
             }
           });
-        }
+        } */
 
         closeAllDropdowns() {
           const dropdowns = document.querySelectorAll(".ticket-dropdown");
@@ -320,16 +262,16 @@
           this.ticketsList.innerHTML = this.tickets
             .map(
               (ticket) => `
-      <li class="ticket-item priority-${ticket.priority}">
+      <li class="ticket-item priority-${ticket[0]}">
         <div class="ticket-header">
-          <h3>${ticket.title}</h3>
-          <p>${ticket.description}</p>
+          <h3>${ticket[2]}</h3>
+          <p>${ticket[3]}</p>
           <div style="margin-top: 1rem">
             <span class="status-badge status-${
               ticket.status
-            }">${ticket.status.toUpperCase()}</span>
-            <small style="margin-left: 1rem">Departamento: ${ticket.department.toUpperCase()}</small>
-            <small style="margin-left: 1rem">Creado: ${ticket.createdAt}</small>
+            }">${ticket[5].toUpperCase()}</span>
+            <small style="margin-left: 1rem">Departamento: ${ticket[1].toUpperCase()}</small>
+            <small style="margin-left: 1rem">Creado: ${ticket[4]}</small>
             ${
               ticket.assignee
                 ? `<small style="margin-left: 1rem">Asignado a: ${ticket.assignee}</small>`

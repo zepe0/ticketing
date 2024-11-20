@@ -1,14 +1,40 @@
 function login() {
   const email = document.getElementById("login-email").value;
   const password = document.getElementById("login-password").value;
-  // Aquí puedes agregar la lógica para el proceso de login
-  console.log("Login:", { email, password });
+  const user = { email, password };
+  fetch("/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+
+    body: JSON.stringify(user),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok " + response.statusText);
+      }
+      return response.json();
+    })
+    .then((data) => {
+      if (data.error) {
+        showNotification("Error", data.error, "error");
+      } else {
+        if(data.sus && data.sus === true){
+          setInterval(() => { window.location.href = "/tickets"; }, 3000);
+   
+        }
+        showNotification("Success", data.message, "success");
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
 }
 
 function register() {
   const email = document.getElementById("register-email").value;
   const password = document.getElementById("register-password").value;
-  // Aquí puedes agregar la lógica para el proceso de registro
 
   const user = { email, password };
   fetch("/register", {
@@ -26,11 +52,28 @@ function register() {
       return response.json();
     })
     .then((data) => {
-      console.log("Success:", data);
+      if (data.error) {
+        showNotification("Error", data.error, "error");
+      } else {
+        showNotification("Success", data.message, "success");
+      }
     })
     .catch((error) => {
       console.error("Error:", error);
     });
+}
+
+function showNotification(title, message, type) {
+  const notificationContainer = document.getElementById(
+    "notification-container"
+  );
+  const notification = document.createElement("div");
+  notification.classList.add("notification", type);
+  notification.innerHTML = `<strong>${title}</strong>: ${message}`;
+  notificationContainer.appendChild(notification);
+  setTimeout(() => {
+    notification.remove();
+  }, 3000);
 }
 function toggleForm() {
   const container = document.querySelectorAll(".register");

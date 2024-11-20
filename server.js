@@ -10,6 +10,8 @@ import { loadEnv } from "./config/env.js";
 import userController from "./controllers/userController.js";
 import User_register from "./controllers/User_register.js";
 import { error } from "node:console";
+import User_login from "./controllers/User_login.js";
+import tickets from "./routes/tickets.js";
 
 loadEnv();
 
@@ -24,17 +26,31 @@ db.connect();
 chatController(io);
 userController(io);
 app.use(express.json());
+
 // Rutas de vistas
 app.use("/", viewRoutes);
+app.use("/api", tickets);
 app.post("/register", async (req, res) => {
-  const { email,  password } = req.body;
+  const { email, password } = req.body;
   try {
-    await User_register({ email,password });
+    await User_register({ email, password });
     res.status(201).json({ message: "Usuario registrado correctamente" });
   } catch (error) {
-    res.status(501).json(error.message);
+    res.status(203).json({ error: error.message });
   }
 });
+
+
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    await User_login({ email, password });
+    res.status(201).json({ message: "Usuario logeado correctamente", sus: true });
+  } catch (error) {
+    res.status(203).json({ error: error.message });
+  }
+});
+
 app.use(
   express.static(path.join(process.cwd(), "client"), {
     setHeaders: (res, filePath) => {
