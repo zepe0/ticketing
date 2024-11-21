@@ -30,7 +30,7 @@ db.connect = async () => {
     CREATE TABLE IF NOT EXISTS tickets (
       uid TEXT PRIMARY KEY ,
       departamento TEXT ,
-      email TEXT NOT NULL,
+      email TEXT UNIQUE NOT NULL,
       des NOT NULL,
       creado date default current_date,
       estado TEXT NOT NULL,
@@ -42,7 +42,7 @@ db.connect = async () => {
   `);
   const uid = generateUID();
   await db.execute({
-    sql: "INSERT  OR IGNORE INTO user (uid,nombre,email,pws) VALUES (:uid,:nombre,:email,:pws)",
+    sql: "INSERT OR IGNORE INTO user (uid,nombre,email,pws) VALUES (:uid,:nombre,:email,:pws)",
     args: {
       uid: uid,
       nombre: "demo",
@@ -50,19 +50,7 @@ db.connect = async () => {
       pws: "demo",
     },
   });
-  await db.execute({
-    sql: "INSERT  OR IGNORE INTO tickets (uid,departamento,email,des, estado,prioridad,titulo) VALUES (:uid,:departamento,:email,:des,:estado,:prioridad,:titulo)",
-    args: {
-      uid: uid,
-      departamento: "IT",
-      estado: "Abierto",
-      prioridad: "alta",
-      email: "demo@demo",
-      des: "demo",
-      email: "demo@demo",
-      titulo: "demo se rompe",
-    },
-  });
+ 
 
   console.log("Database connected and table created");
 };

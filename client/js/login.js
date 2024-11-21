@@ -20,9 +20,11 @@ function login() {
       if (data.error) {
         showNotification("Error", data.error, "error");
       } else {
-        if(data.sus && data.sus === true){
-          setInterval(() => { window.location.href = "/tickets"; }, 3000);
-   
+        if (data.token) {
+          sessionStorage.setItem("token", data.token);
+          setInterval(() => {
+            window.location.href = "/tickets";
+          }, 3000);
         }
         showNotification("Success", data.message, "success");
       }

@@ -40,12 +40,16 @@ app.post("/register", async (req, res) => {
   }
 });
 
-
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
-    await User_login({ email, password });
-    res.status(201).json({ message: "Usuario logeado correctamente", sus: true });
+    const token = await User_login({ email, password });
+    if (token === "Usuario no encontrado") {
+      res.status(203).json({ error: "Usuario no encontrado" });
+    }
+    res
+      .status(201)
+      .json({ message: "Usuario logeado correctamente", token: token });
   } catch (error) {
     res.status(203).json({ error: error.message });
   }

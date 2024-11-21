@@ -36,6 +36,24 @@
         border-radius: 8px;
         margin-bottom: 2rem;
       }
+      .nav-menu {
+        background: var(--secondary);
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+      }
+
+      .nav-menu a {
+        color: white;
+        text-decoration: none;
+        margin: 0 15px;
+        font-weight: bold;
+        transition: color 0.3s;
+      }
+
+      .nav-menu a:hover {
+        color: var(--light);
+      }
 
       .ticket-form {
         background: white;
@@ -122,6 +140,10 @@
         background: var(--warning);
         color: white;
       }
+      .status-abierto {
+        background: var(--warning);
+        color: white;
+      }
 
       .status-closed {
         background: var(--success);
@@ -133,7 +155,14 @@
     <div class="container">
       <header class="header">
         <h1>Sistema de Tickets de Soporte</h1>
+
       </header>
+      <nav class="nav-menu">
+        <a href="/admin">Inicio</a>
+        <a href="/tickets" onclick="showView('ticketsView')">Tickets</a>
+        <a href="/users">Usuarios</a>
+        <a href="/newticket">Nuevo 🎫 </a>
+      </nav>
 
       <section class="ticket-form">
         <h2>Crear Nuevo Ticket</h2>
@@ -276,7 +305,7 @@ async loadTickets() {
         renderTickets() {
           this.ticketsList.innerHTML = this.tickets
             .map(
-              (ticket) => `
+              (ticket) =>{if(ticket.email === "aitor.zepe@gmail.com") return `
         <div class="ticket-card priority-${ticket.prioridad}">
           <h3>${ticket.titulo}</h3>
           <p>${ticket.des}</p>
@@ -300,7 +329,7 @@ async loadTickets() {
             }
           </button>
         </div>
-      `
+      `} 
             )
             .join("");
         }
