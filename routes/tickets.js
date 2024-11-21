@@ -6,6 +6,7 @@ const router = express();
 router.get(
   "/tickets",
   async (req, res) =>
+    
     await All_tickets()
       .then((result) => {
         const data = result.rows.map((row) => {
@@ -39,4 +40,21 @@ router.post(
       .catch((error) => res.json({ error: error.message }))
 );
 
+router.get("/mytickets",async (req, res) => {
+  var token = req.headers;
+await All_tickets(token)
+  .then((result) => {
+    const data = result.rows.map((row) => {
+      let rowData = {};
+      result.columns.forEach((column, i) => {
+        rowData[column] = row[i];
+      });
+      return rowData;
+    });
+    res.json(data);
+  })
+
+  .catch((error) => res.json({ error: error.message }));
+ 
+});
 export default router;

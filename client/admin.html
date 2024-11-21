@@ -116,7 +116,7 @@
         border-left: 4px solid var(--success);
       }
 
-      .status-badge {
+      .estado-badge {
         display: inline-block;
         padding: 0.25rem 0.5rem;
         border-radius: 4px;
@@ -173,6 +173,7 @@
         display: none;
       }
     </style>
+    <script src="js/login.js" defer></script>
   </head>
   <body>
     <div class="container">
@@ -269,49 +270,20 @@
           this.init();
         }
 
-        loadSampleData() {
-          return [
-            {
-              id: 1,
-              title: "Problema de hardware",
-              description: "Falló el disco duro",
-              status: "open",
-              priority: "high",
-              department: "it",
-              createdAt: new Date().toLocaleDateString(),
-              assignee: null,
+        async loadSampleData() {
+          await fetch("api/mytickets", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              authorization: `Bearer ${sessionStorage.getItem("token")}`,
             },
-            {
-              id: 2,
-              title: "Error en la aplicación",
-              description: "La aplicación se cierra inesperadamente",
-              status: "closed",
-              priority: "medium",
-              department: "it",
-              createdAt: new Date().toLocaleDateString(),
-              assignee: "Juan Perez",
-            },
-            {
-              id: 3,
-              title: "Solicitud de acceso",
-              description: "Acceso a la base de datos necesario",
-              status: "open",
-              priority: "low",
-              department: "finance",
-              createdAt: new Date().toLocaleDateString(),
-              assignee: null,
-            },
-            {
-              id: 4,
-              title: "Fallo en impresora",
-              description: "Impresora no responde",
-              status: "closed",
-              priority: "medium",
-              department: "maintenance",
-              createdAt: new Date().toLocaleDateString(),
-              assignee: "Maria Lopez",
-            },
-          ];
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              this.tickets = data;
+              this.renderTickets();
+              this.updateStats();
+            });
         }
 
         init() {
@@ -339,7 +311,7 @@
           const today = new Date().toLocaleDateString();
           const resolvedToday = this.tickets.filter(
             (t) =>
-              t.status === "closed" &&
+              t.estado === "closed" &&
               new Date(t.createdAt).toLocaleDateString() === today
           ).length;
           document.getElementById("resolvedToday").textContent = resolvedToday;
@@ -347,7 +319,7 @@
 
         deleteTicket(id) {
           if (confirm("¿Estás seguro de que deseas eliminar este ticket?")) {
-            this.tickets = this.tickets.filter((t) => t.id !== id);
+            this.tickets = this.tickets.filter((t) => t.uid !== id);
             this.renderTickets();
             this.updateStats();
           }
@@ -356,7 +328,7 @@
         assignTicket(id) {
           const assignee = prompt("Ingrese el nombre del responsable:");
           if (assignee) {
-            const ticket = this.tickets.find((t) => t.id === id);
+            const ticket = this.tickets.find((t) => t.uid === id);
             if (ticket) {
               ticket.assignee = assignee;
               this.renderTickets();
@@ -365,9 +337,10 @@
         }
 
         toggleTicketStatus(id) {
-          const ticket = this.tickets.find((t) => t.id === id);
+          debugger;
+          const ticket = this.tickets.find((t) => t.uid === id);
           if (ticket) {
-            ticket.status = ticket.status === "open" ? "closed" : "open";
+            ticket.estado = ticket.estado === "open" ? "closed" : "open";
             this.renderTickets();
             this.updateStats();
           }
@@ -381,13 +354,13 @@
           const department = this.filterDepartment.value;
 
           if (status !== "all") {
-            filtered = filtered.filter((t) => t.status === status);
+            filtered = filtered.filter((t) => t.estado === status);
           }
           if (priority !== "all") {
-            filtered = filtered.filter((t) => t.priority === priority);
+            filtered = filtered.filter((t) => t.prioridad === priority);
           }
           if (department !== "all") {
-            filtered = filtered.filter((t) => t.department === department);
+            filtered = filtered.filter((t) => t.departamento === department);
           }
 
           return filtered;
@@ -398,55 +371,55 @@
           this.ticketsList.innerHTML = filteredTickets
             .map(
               (ticket) => `
-      <div class="ticket-card priority-${ticket.priority}">
-        <h3>${ticket.title}</h3>
-        <p>${ticket.description}</p>
+      <div class="ticket-card priority-${ticket.prioridad}">
+        <h3>${ticket.titulo}</h3>
+        <p>${ticket.des}</p>
         <div style="margin-top: 1rem">
           <span class="status-badge status-${
-            ticket.status
-          }">${ticket.status.toUpperCase()}</span>
-          <small style="margin-left: 1rem">Departamento: ${ticket.department.toUpperCase()}</small>
-          <small style="margin-left: 1rem">Creado: ${ticket.createdAt}</small>
+            ticket.estado
+          }">${ticket.estado.toUpperCase()}</span>
+          <small style="margin-left: 1rem">Departamento: ${ticket.departamento.toUpperCase()}</small>
+          <small style="margin-left: 1rem">Creado: ${ticket.creado}</small>
           ${
-            ticket.assignee
-              ? `<small style="margin-left: 1rem">Asignado a: ${ticket.assignee}</small>`
+            ticket.asignado
+              ? `<small style="margin-left: 1rem">Asignado a: ${ticket.asignado}</small>`
               : ""
           }
         </div>
         <div class="admin-actions">
           <button
-            onclick="adminTicketSystem.toggleTicketStatus(${ticket.id})"
+            onclick="adminTicketSystem.toggleTicketStatus(${ticket.uid})"
             class="btn btn-small"
             style="background: ${
-              ticket.status === "open" ? "var(--success)" : "var(--warning)"
+              ticket.estado === "open" ? "var(--success)" : "var(--warning)"
             }">
             ${
-              ticket.status === "open"
+              ticket.estado === "open"
                 ? "Marcar como Resuelto"
                 : "Reabrir Ticket"
             }
           </button>
           ${
-            ticket.status === "closed"
+            ticket.estado === "closed"
               ? ` <button
-            onclick="adminTicketSystem.assignTicket(${ticket.id})"
+            onclick="adminTicketSystem.assignTicket(${ticket.uid})"
             class=" hidden">
             Asignar
           </button>
           <button
-            onclick="adminTicketSystem.deleteTicket(${ticket.id})"
+            onclick="adminTicketSystem.deleteTicket(${ticket.uid})"
             class=" hidden">
             Eliminar
           </button>
         </div>
       </div>`
               : ` <button
-            onclick="adminTicketSystem.assignTicket(${ticket.id})"
+            onclick="adminTicketSystem.assignTicket(${ticket.uid})"
             class="btn btn-small btn-assign ">
             Asignar
           </button>
           <button
-            onclick="adminTicketSystem.deleteTicket(${ticket.id})"
+            onclick="adminTicketSystem.deleteTicket(${ticket.uid})"
             class="btn btn-small btn-delete ">
             Eliminar
           </button>

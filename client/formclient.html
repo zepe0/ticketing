@@ -241,11 +241,14 @@
           this.renderTickets();
         }
 async loadTickets() {
+  
+  debugger
       try {
-        const response = await fetch("/api/tickets", {
+        const response = await fetch("/api/mytickets", {
           method: "get",
           headers: {
             "Content-Type": "application/json",
+            "authorization": `Bearer ${sessionStorage.getItem("token")}`,
           },
         });
         const data = await response.json();

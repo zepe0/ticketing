@@ -1,10 +1,9 @@
 import { db } from "../config/database.js";
-import { generateUID } from "../utils/generateUid.js";
+
 
 async function All_tickets(user) {
   let result;
 
-  const uid = generateUID();
   try {
     result = await db.execute({
       sql: "select * from tickets",
