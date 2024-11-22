@@ -219,10 +219,7 @@
         </form>
       </section>
 
-      <section class="tickets-list">
-        <h2>Tickets Activos</h2>
-        <div id="ticketsList"></div>
-      </section>
+    
     </div>
 
     <script>
@@ -235,30 +232,14 @@
           this.init();
         }
 
-       async init() {
-        await this.loadTickets();
+        init() {
+       
           this.form.addEventListener("submit", (e) => this.handleSubmit(e));
-          this.renderTickets();
+         
         }
-async loadTickets() {
+
   
-  debugger
-      try {
-        const response = await fetch("/api/mytickets", {
-          method: "get",
-          headers: {
-            "Content-Type": "application/json",
-            "authorization": `Bearer ${sessionStorage.getItem("token")}`,
-          },
-        });
-        const data = await response.json();
-        this.tickets = data;
-        
-      } catch (error) {
-        console.error("Error:", error);
-        this.tickets = [];
-      }
-    }
+
 
         handleSubmit(e) {
           e.preventDefault();
@@ -272,9 +253,9 @@ async loadTickets() {
             estado: "open",
           };
 
-          this.tickets.unshift(ticket);
+         
           this.saveTickets(ticket);
-          this.renderTickets();
+          
           this.form.reset();
         }
 
@@ -294,49 +275,12 @@ async loadTickets() {
             .catch((error) => {
               console.error("Error:", error);
             });
-        }
-
-        toggleTicketStatus(id) {
-          const ticket = this.tickets.find((t) => t.id === id);
-          if (ticket) {
-            ticket.status = ticket.status === "open" ? "closed" : "open";
-            this.saveTickets();
-            this.renderTickets();
-          }
-        }
-
-        renderTickets() {
-          this.ticketsList.innerHTML = this.tickets
-            .map(
-              (ticket) =>{if(ticket.email === "aitor.zepe@gmail.com") return `
-        <div class="ticket-card priority-${ticket.prioridad}">
-          <h3>${ticket.titulo}</h3>
-          <p>${ticket.des}</p>
-          <div style="margin-top: 1rem">
-            <span class="status-badge status-${
-              ticket.estado
-            }">${ticket.estado}</span>
-            <small style="margin-left: 1rem">Departamento: ${ticket.departamento.toUpperCase()}</small>
-            <small style="margin-left: 1rem">Creado: ${ticket.creado}</small>
-          </div>
-          <button
-            onclick="ticketSystem.toggleTicketStatus(${ticket.uid})"
-            class="btn"
-            style="margin-top: 1rem; background: ${
-              ticket.estado === "abiero" ? "var(--success)" : "var(--warning)"
-            }">
-            ${
-              ticket.estado === "abiero"
-                ? "Marcar como Resuelto"
-                : "Reabrir Ticket"
-            }
-          </button>
-        </div>
-      `} 
-            )
-            .join("");
-        }
+        }   
       }
+
+       
+        
+      
 
       const ticketSystem = new TicketSystem();
     </script>

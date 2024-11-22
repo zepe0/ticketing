@@ -1,22 +1,17 @@
 import { db } from "../config/database.js";
 import { generateUID } from "../utils/generateUid.js";
 
-async function New_tickets(user) {
+async function Del_tickets(ticket, user) {
   let result;
 
-  const uid = generateUID();
+ 
+  debugger;
   const { prioridad, departamento, des, email, estado, titulo } = user;
   try {
     result = await db.execute({
-      sql: "Insert into tickets (uid,departamento,des,email,estado,prioridad,titulo) VALUES (:uid,:departamento,:des,:email,:estado,:prioridad,:titulo)",
+      sql: "DELETE FROM tickets WHERE uid = :uid",
       args: {
-        uid: uid,
-        departamento: departamento,
-        estado: estado,
-        prioridad: prioridad,
-        des: des,
-        titulo: titulo,
-        email: email,
+        uid: ticket,
       },
     });
     return result;
@@ -36,4 +31,4 @@ async function New_tickets(user) {
     throw error;
   }
 }
-export default New_tickets;
+export default Del_tickets;

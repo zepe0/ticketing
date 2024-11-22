@@ -267,6 +267,9 @@
           this.filterPriority = document.getElementById("filterPriority");
           this.filterDepartment = document.getElementById("filterDepartment");
 
+          this.deleteTicket = this.deleteTicket;
+          this.assignTicket = this.assignTicket.bind(this);
+          this.toggleTicketStatus = this.toggleTicketStatus.bind(this);
           this.init();
         }
 
@@ -301,6 +304,8 @@
         }
 
         updateStats() {
+          if (typeof this.tickets.then === "function") return [];
+
           document.getElementById("totalTickets").textContent =
             this.tickets.length;
           document.getElementById("openTickets").textContent =
@@ -318,11 +323,18 @@
         }
 
         deleteTicket(id) {
-          if (confirm("¿Estás seguro de que deseas eliminar este ticket?")) {
+         fetch(`api/delticket`, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            },
+            body: JSON.stringify({ uid: id }),
+          })
             this.tickets = this.tickets.filter((t) => t.uid !== id);
             this.renderTickets();
             this.updateStats();
-          }
+          
         }
 
         assignTicket(id) {
@@ -347,6 +359,7 @@
         }
 
         filterTickets() {
+          if (typeof this.tickets.then === "function") return [];
           let filtered = [...this.tickets];
 
           const status = this.filterStatus.value;
@@ -371,68 +384,85 @@
           this.ticketsList.innerHTML = filteredTickets
             .map(
               (ticket) => `
-      <div class="ticket-card priority-${ticket.prioridad}">
-        <h3>${ticket.titulo}</h3>
-        <p>${ticket.des}</p>
-        <div style="margin-top: 1rem">
-          <span class="status-badge status-${
-            ticket.estado
-          }">${ticket.estado.toUpperCase()}</span>
-          <small style="margin-left: 1rem">Departamento: ${ticket.departamento.toUpperCase()}</small>
-          <small style="margin-left: 1rem">Creado: ${ticket.creado}</small>
-          ${
-            ticket.asignado
-              ? `<small style="margin-left: 1rem">Asignado a: ${ticket.asignado}</small>`
-              : ""
-          }
-        </div>
-        <div class="admin-actions">
-          <button
-            onclick="adminTicketSystem.toggleTicketStatus(${ticket.uid})"
-            class="btn btn-small"
-            style="background: ${
-              ticket.estado === "open" ? "var(--success)" : "var(--warning)"
-            }">
-            ${
-              ticket.estado === "open"
-                ? "Marcar como Resuelto"
-                : "Reabrir Ticket"
-            }
-          </button>
-          ${
-            ticket.estado === "closed"
-              ? ` <button
-            onclick="adminTicketSystem.assignTicket(${ticket.uid})"
-            class=" hidden">
-            Asignar
-          </button>
-          <button
-            onclick="adminTicketSystem.deleteTicket(${ticket.uid})"
-            class=" hidden">
-            Eliminar
-          </button>
-        </div>
-      </div>`
-              : ` <button
-            onclick="adminTicketSystem.assignTicket(${ticket.uid})"
-            class="btn btn-small btn-assign ">
-            Asignar
-          </button>
-          <button
-            onclick="adminTicketSystem.deleteTicket(${ticket.uid})"
-            class="btn btn-small btn-delete ">
-            Eliminar
-          </button>
-        </div>
-      </div>`
-          }`
+            <div class="ticket-card priority-${ticket.prioridad}">
+              <h3>${ticket.titulo}</h3>
+              <p>${ticket.des}</p>
+              <div style="margin-top: 1rem">
+                <span class="status-badge status-${
+                  ticket.estado
+                }">${ticket.estado.toUpperCase()}</span>
+                <small style="margin-left: 1rem">Departamento: ${ticket.departamento.toUpperCase()}</small>
+                <small style="margin-left: 1rem">Creado: ${
+                  ticket.creado
+                }</small>
+                ${
+                  ticket.asignado
+                    ? `<small style="margin-left: 1rem">Asignado a: ${ticket.asignado}</small>`
+                    : ""
+                }
+              </div>
+              <div class="admin-actions">
+                <button
+                  onclick="adminTicketSystem.toggleTicketStatus(${ticket.uid})"
+                  class="btn btn-small"
+                  style="background: ${
+                    ticket.estado === "open"
+                      ? "var(--success)"
+                      : "var(--warning)"
+                  }">
+                  ${
+                    ticket.estado === "open"
+                      ? "Marcar como Resuelto"
+                      : "Reabrir Ticket"
+                  }
+                </button>
+                ${
+                  ticket.estado === "closed"
+                    ? ` <button
+                  onclick="adminTicketSystem.assignTicket(${ticket.uid})"
+                  class=" hidden">
+                  Asignar
+                </button>
+                <button
+                data= "${ticket.uid}"
+                 
+                  class=" hidden">
+                  Eliminar1
+                </button>
+              </div>
+            </div>`
+                    : ` <button
+                  onclick='adminTicketSystem.assignTicket(${ticket.uid})'
+                  class="btn btn-small btn-assign ">
+                  Asignar
+                </button>
+                <button
+                data-ticket-id= "${ticket.uid}"
+                  class="btn btn-small btn-delete ">
+                  Eliminar2
+                </button>
+              </div>
+            </div>`
+                }`
             )
             .join("");
+          this.ticketsList.addEventListener("click", (e) => {
+            const card = e.target.closest(".ticket-card");
+
+            if (!card) return;
+
+            const ticketId = e.target.getAttribute("data-ticket-id");
+            if (e.target.classList.contains("btn-assign")) {
+              this.assignTicket(ticketId);
+            } else if (e.target.classList.contains("btn-delete")) {
+              this.deleteTicket(ticketId);
+            }
+          });
         }
       }
 
       const adminTicketSystem = new AdminTicketSystem();
-
+      window.adminTicketSystem = adminTicketSystem;
       function showView(viewId) {
         const views = document.querySelectorAll(".view");
         views.forEach((view) => {
@@ -443,6 +473,8 @@
 
       // Show the tickets view by default
       showView("ticketsView");
+
+
     </script>
   </body>
 </html>

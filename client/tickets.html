@@ -230,7 +230,7 @@
           fetch("/api/tickets")
             .then((response) => response.json())
             .then((data) => {
-              console.log("Tickets loaded:", data);
+             
               this.tickets = data;
               if (data.length === 0) {
                 ticketsList.innerHTML = `<li class="ticket-item">No hay tickets disponibles</li>`;
