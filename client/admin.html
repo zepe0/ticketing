@@ -303,7 +303,7 @@
           this.updateStats();
         }
 
-        updateStats() {
+        updateStats(id) {
           if (typeof this.tickets.then === "function") return [];
 
           document.getElementById("totalTickets").textContent =
@@ -323,29 +323,90 @@
         }
 
         deleteTicket(id) {
-         fetch(`api/delticket`, {
+          fetch(`api/delticket`, {
             method: "DELETE",
             headers: {
               "Content-Type": "application/json",
               authorization: `Bearer ${sessionStorage.getItem("token")}`,
             },
             body: JSON.stringify({ uid: id }),
-          })
-            this.tickets = this.tickets.filter((t) => t.uid !== id);
-            this.renderTickets();
-            this.updateStats();
-          
+          });
+          this.tickets = this.tickets.filter((t) => t.uid !== id);
+          this.renderTickets();
+          this.updateStats();
         }
 
         assignTicket(id) {
-          const assignee = prompt("Ingrese el nombre del responsable:");
-          if (assignee) {
-            const ticket = this.tickets.find((t) => t.uid === id);
-            if (ticket) {
-              ticket.assignee = assignee;
-              this.renderTickets();
-            }
-          }
+          const dialog = document.createElement("dialog");
+          fetch("/workers/users", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            },
+          })
+            .then((res) => res.json())
+
+            .then((data) => {
+              dialog.innerHTML = `
+              <form id="assignTicketForm">
+                <label for="assignee">Asignar a:</label>
+                <select id="assignee" name="assignee" required>
+                  ${data
+                    .map(
+                      (user) =>
+                        `<option value="${user.nombre}">${user.nombre}</option>`
+                    )
+                    .join("")}
+                </select>
+                <button type="submit">Asignar</button>
+              </form>
+            `;
+              document.body.appendChild(dialog);
+
+              const form = dialog.querySelector("#assignTicketForm");
+
+              form.addEventListener("submit", (event) => {
+                event.preventDefault();
+                const assignee = form.assignee.value;
+                this.updateTicketAssignee(id, assignee).then((update) => {
+                  if (update) {
+                    dialog.close();
+                    this.renderTickets();
+                  }
+                });
+              });
+
+              dialog.showModal();
+              dialog.addEventListener("close", () => {
+                dialog.remove();
+              });
+            });
+        }
+        updateTicketAssignee(id, assignee) {
+          return fetch(`workers/asing`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            },
+            body: JSON.stringify({ uid: id, asignado: assignee }),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("No se pudo actualizar el ticket");
+              }
+              const ticket = this.tickets.find((t) => t.uid === id);
+              if (ticket) {
+                ticket.asignado = assignee;
+                return true;
+              }
+              return false;
+            })
+            .catch((error) => {
+              console.error("Error al actualizar el ticket:", error);
+              return false;
+            });
         }
 
         toggleTicketStatus(id) {
@@ -420,6 +481,7 @@
                   ticket.estado === "closed"
                     ? ` <button
                   onclick="adminTicketSystem.assignTicket(${ticket.uid})"
+                   data-ticket-id= "${ticket.uid}"
                   class=" hidden">
                   Asignar
                 </button>
@@ -433,13 +495,14 @@
             </div>`
                     : ` <button
                   onclick='adminTicketSystem.assignTicket(${ticket.uid})'
-                  class="btn btn-small btn-assign ">
+                  class="btn btn-small btn-assign "
+                  data-ticket-id= "${ticket.uid}">
                   Asignar
                 </button>
                 <button
                 data-ticket-id= "${ticket.uid}"
                   class="btn btn-small btn-delete ">
-                  Eliminar2
+                  Eliminar
                 </button>
               </div>
             </div>`
@@ -473,8 +536,6 @@
 
       // Show the tickets view by default
       showView("ticketsView");
-
-
     </script>
   </body>
 </html>

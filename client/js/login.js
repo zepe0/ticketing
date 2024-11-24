@@ -20,7 +20,7 @@ function login() {
       if (data.error) {
         showNotification("Error", data.error, "error");
       } else {
-        debugger
+       
         if (data.token) {
           sessionStorage.setItem("token", data.token);
          

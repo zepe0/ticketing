@@ -12,6 +12,8 @@ import User_register from "./controllers/User_register.js";
 import { error } from "node:console";
 import User_login from "./controllers/User_login.js";
 import tickets from "./routes/tickets.js";
+import workers from "./routes/workers.js";
+
 
 loadEnv();
 
@@ -30,6 +32,7 @@ app.use(express.json());
 // Rutas de vistas
 app.use("/", viewRoutes);
 app.use("/api", tickets);
+app.use("/workers", workers);
 app.post("/register", async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -45,9 +48,9 @@ app.post("/login", async (req, res) => {
   try {
     const token = await User_login({ email, password });
     if (token === "Usuario no encontrado") {
-      res.status(203).json({ error: "Usuario no encontrado" });
+      return res.status(203).json({ error: "Usuario no encontrado" });
     }
-    res
+    return res
       .status(201)
       .json({ message: "Usuario logeado correctamente", token: token });
   } catch (error) {
