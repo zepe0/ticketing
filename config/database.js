@@ -22,7 +22,8 @@ db.connect = async () => {
       uid TEXT PRIMARY KEY ,
       nombre TEXT ,
       email TEXT UNIQUE NOT NULL,
-      pws TEXT NOT NULL
+      pws TEXT NOT NULL,
+      rol INTEGER DEFAULT 0
     )
   `);
   /*  FOREIGN KEY (uid) REFERENCES user(uid) */
@@ -42,15 +43,15 @@ db.connect = async () => {
   `);
   const uid = generateUID();
   await db.execute({
-    sql: "INSERT OR IGNORE INTO user (uid,nombre,email,pws) VALUES (:uid,:nombre,:email,:pws)",
+    sql: "INSERT OR IGNORE INTO user (uid,nombre,email,pws,rol) VALUES (:uid,:nombre,:email,:pws,:rol)",
     args: {
       uid: uid,
       nombre: "demo",
       email: "demo@demo.es",
       pws: "demo",
+      rol: 1,
     },
   });
- 
 
   console.log("Database connected and table created");
 };

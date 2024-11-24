@@ -26,6 +26,7 @@ async function User_login(user) {
           email: user.email,
           nombre: user.nombre,
           id: user.uid,
+          rol: 0,
         },
         process.env.JWT_SECRET
       );
