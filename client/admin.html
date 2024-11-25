@@ -172,6 +172,51 @@
       .hidden {
         display: none;
       }
+      dialog {
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        padding: 20px;
+        max-width: 400px;
+        width: 100%;
+        background-color: #fff;
+        font-family: Arial, sans-serif;
+      }
+
+      dialog::backdrop {
+        background: rgba(0, 0, 0, 0.5);
+      }
+
+      #assignTicketForm {
+        display: flex;
+        flex-direction: column;
+      }
+
+      #assignTicketForm label {
+        margin-bottom: 8px;
+        font-weight: bold;
+      }
+
+      #assignTicketForm select {
+        margin-bottom: 16px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+
+      #assignTicketForm button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        background-color: #007bff;
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      #assignTicketForm button:hover {
+        background-color: #0056b3;
+      }
     </style>
     <script src="js/login.js" defer></script>
   </head>
@@ -299,6 +344,23 @@
           this.filterDepartment.addEventListener("change", () =>
             this.renderTickets()
           );
+
+          // Añadir el event listener al inicio solo una vez
+          this.ticketsList.addEventListener("click", (e) => {
+            const card = e.target.closest(".ticket-card");
+            if (!card) return;
+
+            const ticketId = e.target.getAttribute("data-ticket-id");
+
+            if (e.target.classList.contains("btn-assign")) {
+              this.assignTicket(ticketId);
+            } else if (e.target.classList.contains("btn-delete")) {
+              this.deleteTicket(ticketId);
+            } else if (e.target.classList.contains("toggle-status")) {
+              this.toggleTicketStatus(ticketId);
+            }
+          });
+
           this.renderTickets();
           this.updateStats();
         }
@@ -346,77 +408,91 @@
             },
           })
             .then((res) => res.json())
-
             .then((data) => {
               dialog.innerHTML = `
-              <form id="assignTicketForm">
-                <label for="assignee">Asignar a:</label>
-                <select id="assignee" name="assignee" required>
-                  ${data
-                    .map(
-                      (user) =>
-                        `<option value="${user.nombre}">${user.nombre}</option>`
-                    )
-                    .join("")}
-                </select>
-                <button type="submit">Asignar</button>
-              </form>
-            `;
+        <form id="assignTicketForm">
+          <label for="assignee">Asignar a:</label>
+          <select id="assignee" name="assignee" required>
+            ${data
+              .map(
+                (user) =>
+                  `<option value="${user.nombre}">${user.nombre}</option>`
+              )
+              .join("")}
+          </select>
+          <button type="submit">Asignar</button>
+        </form>
+      `;
               document.body.appendChild(dialog);
 
               const form = dialog.querySelector("#assignTicketForm");
-
               form.addEventListener("submit", (event) => {
                 event.preventDefault();
                 const assignee = form.assignee.value;
                 this.updateTicketAssignee(id, assignee).then((update) => {
                   if (update) {
+                    this.loadSampleData();
                     dialog.close();
-                    this.renderTickets();
+                    dialog.remove();
                   }
                 });
               });
 
               dialog.showModal();
-              dialog.addEventListener("close", () => {
-                dialog.remove();
-              });
             });
         }
+
         updateTicketAssignee(id, assignee) {
-          return fetch(`workers/asing`, {
-            method: "PUT",
+          return fetch(`/workers/assing`, {
+            method: "POST",
             headers: {
               "Content-Type": "application/json",
               authorization: `Bearer ${sessionStorage.getItem("token")}`,
             },
-            body: JSON.stringify({ uid: id, asignado: assignee }),
+            body: JSON.stringify({ id, assignee }),
           })
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error("No se pudo actualizar el ticket");
-              }
-              const ticket = this.tickets.find((t) => t.uid === id);
-              if (ticket) {
-                ticket.asignado = assignee;
+            .then((res) => res.json())
+            .then((data) => {
+              if (data) {
+                // Actualiza la interfaz de usuario según sea necesario
+                alert("Ticket asignado correctamente");
                 return true;
+              } else {
+                alert("Error al asignar el ticket");
+                return false;
               }
-              return false;
             })
             .catch((error) => {
-              console.error("Error al actualizar el ticket:", error);
+              console.error("Error:", error);
               return false;
             });
         }
 
         toggleTicketStatus(id) {
-          debugger;
+          
           const ticket = this.tickets.find((t) => t.uid === id);
-          if (ticket) {
-            ticket.estado = ticket.estado === "open" ? "closed" : "open";
-            this.renderTickets();
-            this.updateStats();
-          }
+          return fetch(`/api/status`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            },
+            body: JSON.stringify({ id: id, estado: ticket.estado }),
+          })
+            .then((res) => res.json())
+            .then((data) => {
+              if (data) {
+                // Actualiza la interfaz de usuario según sea necesario
+
+                return true;
+              } else {
+                return false;
+              }
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              return false;
+            });
         }
 
         filterTickets() {
@@ -464,8 +540,9 @@
               </div>
               <div class="admin-actions">
                 <button
-                  onclick="adminTicketSystem.toggleTicketStatus(${ticket.uid})"
-                  class="btn btn-small"
+
+                  data-ticket-id=${ticket.uid}
+                  class="btn btn-small toggle-status"
                   style="background: ${
                     ticket.estado === "open"
                       ? "var(--success)"
@@ -487,16 +564,16 @@
                 </button>
                 <button
                 data= "${ticket.uid}"
-                 
+
                   class=" hidden">
                   Eliminar1
                 </button>
               </div>
             </div>`
                     : ` <button
-                  onclick='adminTicketSystem.assignTicket(${ticket.uid})'
+                  onclick="adminTicketSystem.assignTicket(${ticket.uid})"
                   class="btn btn-small btn-assign "
-                  data-ticket-id= "${ticket.uid}">
+                  data-ticket-id="${ticket.uid}">
                   Asignar
                 </button>
                 <button
@@ -509,18 +586,6 @@
                 }`
             )
             .join("");
-          this.ticketsList.addEventListener("click", (e) => {
-            const card = e.target.closest(".ticket-card");
-
-            if (!card) return;
-
-            const ticketId = e.target.getAttribute("data-ticket-id");
-            if (e.target.classList.contains("btn-assign")) {
-              this.assignTicket(ticketId);
-            } else if (e.target.classList.contains("btn-delete")) {
-              this.deleteTicket(ticketId);
-            }
-          });
         }
       }
 
@@ -534,7 +599,6 @@
         document.getElementById(viewId).classList.remove("hidden");
       }
 
-      // Show the tickets view by default
       showView("ticketsView");
     </script>
   </body>

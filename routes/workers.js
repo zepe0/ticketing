@@ -21,9 +21,10 @@ router.get(
 
       .catch((error) => res.json({ error: error.message }))
 );
-router.put("/asing", async (req, res) => {
-  const { uid, asignado } = req.body;
-  await Asing_workers(uid, asignado)
+router.post("/assing", async (req, res) => {
+  debugger;
+  const { id, assignee } = req.body;
+  await Asing_workers(id, assignee)
     .then((result) => {
       const data = result.rows.map((row) => {
         let rowData = {};

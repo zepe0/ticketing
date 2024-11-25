@@ -1,15 +1,16 @@
 import { json } from "express";
 import { db } from "../config/database.js";
 
-async function Asing_workers(uid, asignado) {
+async function Upd_status(data) {
   let result;
-  debugger;
+  const new_status = data.estado === "open" ? "cerrado" : "abierto"; 
+  //TODO: Cambiar el estado de un ticket
   try {
     result = await db.execute({
-      sql: "update tickets set asignado = :worker where uid = :id",
+      sql: "update tickets set estado = :estado where uid = :id",
       args: {
-        id: uid,
-        worker: asignado,
+        id: data.id,
+        estado: new_status,
       },
     });
 
@@ -30,4 +31,4 @@ async function Asing_workers(uid, asignado) {
     throw error;
   }
 }
-export default Asing_workers;
+export default Upd_status;
