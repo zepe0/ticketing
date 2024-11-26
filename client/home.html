@@ -1,0 +1,338 @@
+<html>
+  <head>
+    <base href="." />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SupportFlow Pro</title>
+    <style>
+      :root {
+        --primary: #2c3e50;
+        --secondary: #3498db;
+        --accent: #2ecc71;
+        --light: #ecf0f1;
+        --dark: #2c3e50;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Arial", sans-serif;
+      }
+
+      body {
+        background-color: var(--light);
+      }
+
+      nav {
+        background-color: var(--primary);
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+      }
+
+      .logo {
+        color: white;
+        font-size: 1.5rem;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+      }
+
+      .nav-links a {
+        color: white;
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .nav-links a:hover {
+        color: var(--accent);
+      }
+
+      .hero {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        padding: 8rem 2rem 4rem;
+        text-align: center;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .about {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        padding: 4rem 2rem;
+        background: white;
+      }
+
+      .about-text {
+        padding: 2rem;
+      }
+
+      .about-image {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .departments {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        padding: 4rem 2rem;
+        background: var(--light);
+      }
+
+      .department-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+        text-align: center;
+      }
+
+      .department-card:hover {
+        transform: translateY(-10px);
+      }
+
+      .icon {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .team {
+        padding: 4rem 2rem;
+        background: white;
+      }
+
+      .team-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+
+      .team-member {
+        background: var(--light);
+        border-radius: 10px;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+      }
+
+      .team-member:hover {
+        transform: translateY(-5px);
+      }
+
+      .member-image {
+        height: 200px;
+        background: var(--secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .member-info {
+        padding: 1.5rem;
+      }
+
+      .cta-section {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: linear-gradient(135deg, var(--secondary), var(--primary));
+        color: white;
+      }
+
+      .button {
+        background: var(--accent);
+        color: white;
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 5px;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: transform 0.3s ease, background 0.3s ease;
+      }
+
+      .button:hover {
+        transform: scale(1.05);
+        background: #27ae60;
+      }
+
+      h2 {
+        text-align: center;
+        margin-bottom: 2rem;
+        color: var(--dark);
+      }
+
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+        }
+
+        .about {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="logo">
+       <img src="../img/fotor-ai-20241126185551.jpg" alt="Coder Rocket Fuel Logo" width="50" />
+          <path
+            d="M30 50 L45 65 L70 35"
+            stroke="white"
+            stroke-width="8"
+            fill="none"
+          />
+        </svg>
+        SupportFlow Pro
+      </div>
+      <div class="nav-links">
+        <a href="#inicio">Inicio</a>      
+        <a href="#departamentos">Departamentos</a>
+        <a href="#equipo">Equipo</a>
+        <a href="#contacto">Contacto</a>
+        <a href="/index.html">Login</a>
+      </div>
+    </nav>
+
+    <section class="hero" id="inicio">
+      <h1>Soluciones Empresariales Inteligentes</h1>
+      <p>Gestión eficiente de tickets para todos tus departamentos</p>
+      <br />
+      <button class="button">Crear Nuevo Ticket</button>
+    </section>
+
+    <section class="about">
+      <div class="about-text">
+        <h2>Sobre Nosotros</h2>
+        <p>
+          En SupportFlow Pro, nos especializamos en la gestión integral de
+          tickets empresariales. Nuestro sistema permite una comunicación fluida
+          entre departamentos, garantizando respuestas rápidas y soluciones
+          efectivas para cada necesidad de tu empresa.
+        </p>
+      </div>
+      <div class="about-image">
+     <img src="../img/fotor-ai-20241126185917.jpg" alt="Coder Rocket Fuel Logo" width="200" />
+      </div>
+    </section>
+
+    <section class="departments" id="departamentos">
+      <div class="department-card">
+        <div class="icon">🔧</div>
+        <h3>Mantenimiento</h3>
+        <p>Resolución de problemas técnicos y mantenimiento preventivo</p>
+        <br />
+      </div>
+      <div class="department-card">
+        <div class="icon">👥</div>
+        <h3>Recursos Humanos</h3>
+        <p>Gestión de solicitudes de personal y asuntos laborales</p>
+        <br />
+      </div>
+      <div class="department-card">
+        <div class="icon">💻</div>
+        <h3>IT</h3>
+        <p>Soluciones tecnológicas y soporte de sistemas</p>
+        <br />
+      </div>
+      <div class="department-card">
+        <div class="icon">💵</div>
+        <h3>Finanzas</h3>
+        <p>Asistencia en procesos financieros y control de presupuestos</p>
+        <br />
+      </div>
+    </section>
+
+    <section class="team" id="equipo">
+      <h2>Nuestro Equipo de Expertos</h2>
+      <div class="team-grid">
+        <div class="team-member">
+          <div class="member-image">
+            <svg width="100" height="100" viewBox="0 0 100 100">
+              <circle cx="50" cy="35" r="25" fill="#fff" />
+              <circle cx="50" cy="100" r="40" fill="#fff" />
+            </svg>
+          </div>
+          <div class="member-info">
+            <h3>María González</h3>
+            <p>Directora de Operaciones</p>
+            <p>15 años de experiencia en gestión de servicios IT</p>
+          </div>
+        </div>
+        <div class="team-member">
+          <div class="member-image">
+            <svg width="100" height="100" viewBox="0 0 100 100">
+              <circle cx="50" cy="35" r="25" fill="#fff" />
+              <circle cx="50" cy="100" r="40" fill="#fff" />
+            </svg>
+          </div>
+          <div class="member-info">
+            <h3>Juan Pérez</h3>
+            <p>Líder de Soporte Técnico</p>
+            <p>Experto en resolución de problemas complejos</p>
+          </div>
+        </div>
+        <div class="team-member">
+          <div class="member-image">
+            <svg width="100" height="100" viewBox="0 0 100 100">
+              <circle cx="50" cy="35" r="25" fill="#fff" />
+              <circle cx="50" cy="100" r="40" fill="#fff" />
+            </svg>
+          </div>
+          <div class="member-info">
+            <h3>Ana Martínez</h3>
+            <p>Especialista en RRHH</p>
+            <p>Dedicada a la gestión efectiva del capital humano</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-section" id="contacto">
+      <h2 style="color: white">¿Necesitas ayuda?</h2>
+      <p>Estamos disponibles 24/7 para atender tus solicitudes</p>
+      <br />
+      <button class="button">¡Abre un Ticket Ahora!</button>
+    </section>
+
+    <script>
+      // Animaciones para las tarjetas
+      document
+        .querySelectorAll(".department-card, .team-member")
+        .forEach((card) => {
+          card.addEventListener("mouseenter", function () {
+            this.style.transform = "translateY(-10px)";
+          });
+          card.addEventListener("mouseleave", function () {
+            this.style.transform = "translateY(0)";
+          });
+        });
+
+      // Manejo de botones
+      document.querySelectorAll(".button").forEach((button) => {
+        button.addEventListener("click", function () {
+          window.location.href = "/newticket";
+        });
+      });
+    </script>
+  </body>
+</html>

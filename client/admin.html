@@ -104,15 +104,15 @@
         transform: translateY(-2px);
       }
 
-      .priority-alta {
+      .priority-high {
         border-left: 4px solid var(--danger);
       }
 
-      .priority-media {
+      .priority-medium {
         border-left: 4px solid var(--warning);
       }
 
-      .priority-baja {
+      .priority-low {
         border-left: 4px solid var(--success);
       }
 
@@ -124,14 +124,17 @@
         font-weight: bold;
       }
 
-      .status-open {
+      .status-abierto {
         background: var(--warning);
         color: white;
+        padding: 4px;
+       
       }
 
-      .status-closed {
+      .status-cerrado {
         background: var(--success);
         color: white;
+        padding: 4px;
       }
 
       .btn {
@@ -257,8 +260,8 @@
             <label for="filterStatus">Estado</label>
             <select id="filterStatus" class="form-control">
               <option value="all">Todos</option>
-              <option value="open">Abiertos</option>
-              <option value="closed">Cerrados</option>
+              <option value="abierto">Abiertos</option>
+              <option value="cerrado">Cerrados</option>
             </select>
           </div>
           <div class="filter-group">

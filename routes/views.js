@@ -3,8 +3,11 @@ const router = express();
 import path from "path";
 import { fileURLToPath } from "url";
 
-router.get("/", (req, res) =>
+router.get("/login", (req, res) =>
   res.sendFile(process.cwd() + "/client/index.html")
+);
+router.get("/", (req, res) =>
+  res.sendFile(process.cwd() + "/client/home.html")
 );
 router.get("/admin", (req, res) =>
   res.sendFile(process.cwd() + "/client/admin.html")
@@ -58,8 +61,6 @@ router.use(
       }
     },
   })
-
-
 );
 
 export default router;
