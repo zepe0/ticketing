@@ -3,14 +3,21 @@ import { db } from "../config/database.js";
 
 async function Upd_status(data) {
   let result;
-  const new_status = data.estado === "open" ? "cerrado" : "abierto"; 
-  //TODO: Cambiar el estado de un ticket
+  let fecha_Actual;
+  const new_status = data.estado === "abierto" ? "cerrado" : "abierto";
+  if (new_status === "cerrado") {
+    fecha_Actual = new Date().toISOString().slice(0, 19).replace("T", " ");
+  }else{
+
+    fecha_Actual = null;
+  }
   try {
     result = await db.execute({
-      sql: "update tickets set estado = :estado where uid = :id",
+      sql: "update tickets set estado = :estado ,fecha_resuelto = :fecha where uid = :id",
       args: {
         id: data.id,
         estado: new_status,
+        fecha: fecha_Actual,
       },
     });
 

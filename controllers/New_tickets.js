@@ -5,14 +5,14 @@ async function New_tickets(user) {
   let result;
 
   const uid = generateUID();
-  const { prioridad, departamento, des, email, estado, titulo } = user;
+  const { prioridad, departamento, des, email, titulo } = user;
   try {
     result = await db.execute({
       sql: "Insert into tickets (uid,departamento,des,email,estado,prioridad,titulo) VALUES (:uid,:departamento,:des,:email,:estado,:prioridad,:titulo)",
       args: {
         uid: uid,
         departamento: departamento,
-        estado: estado,
+        estado: "abierto",
         prioridad: prioridad,
         des: des,
         titulo: titulo,

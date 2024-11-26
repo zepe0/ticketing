@@ -329,6 +329,7 @@
             .then((res) => res.json())
             .then((data) => {
               this.tickets = data;
+              console.log(this.tickets);
               this.renderTickets();
               this.updateStats();
             });
@@ -345,7 +346,6 @@
             this.renderTickets()
           );
 
-          // Añadir el event listener al inicio solo una vez
           this.ticketsList.addEventListener("click", (e) => {
             const card = e.target.closest(".ticket-card");
             if (!card) return;
@@ -371,15 +371,16 @@
           document.getElementById("totalTickets").textContent =
             this.tickets.length;
           document.getElementById("openTickets").textContent =
-            this.tickets.filter((t) => t.status === "open").length;
+            this.tickets.filter((t) => t.estado === "abierto").length;
           document.getElementById("highPriority").textContent =
-            this.tickets.filter((t) => t.priority === "high").length;
+            this.tickets.filter((t) => t.prioridad === "alta").length;
 
           const today = new Date().toLocaleDateString();
+
           const resolvedToday = this.tickets.filter(
             (t) =>
-              t.estado === "closed" &&
-              new Date(t.createdAt).toLocaleDateString() === today
+              t.estado === "cerrado" &&
+              new Date().toLocaleDateString() === today
           ).length;
           document.getElementById("resolvedToday").textContent = resolvedToday;
         }
@@ -469,7 +470,6 @@
         }
 
         toggleTicketStatus(id) {
-          
           const ticket = this.tickets.find((t) => t.uid === id);
           return fetch(`/api/status`, {
             method: "POST",
@@ -482,9 +482,7 @@
             .then((res) => res.json())
             .then((data) => {
               if (data) {
-                // Actualiza la interfaz de usuario según sea necesario
-
-                return true;
+                this.loadSampleData();
               } else {
                 return false;
               }
@@ -518,6 +516,7 @@
 
         renderTickets() {
           const filteredTickets = this.filterTickets();
+
           this.ticketsList.innerHTML = filteredTickets
             .map(
               (ticket) => `
@@ -544,18 +543,18 @@
                   data-ticket-id=${ticket.uid}
                   class="btn btn-small toggle-status"
                   style="background: ${
-                    ticket.estado === "open"
+                    ticket.estado === "abierto"
                       ? "var(--success)"
                       : "var(--warning)"
                   }">
                   ${
-                    ticket.estado === "open"
+                    ticket.estado === "abierto"
                       ? "Marcar como Resuelto"
                       : "Reabrir Ticket"
                   }
                 </button>
                 ${
-                  ticket.estado === "closed"
+                  ticket.estado === "cerrado"
                     ? ` <button
                   onclick="adminTicketSystem.assignTicket(${ticket.uid})"
                    data-ticket-id= "${ticket.uid}"
