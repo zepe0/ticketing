@@ -55,6 +55,13 @@
       .nav-menu a:hover {
         color: var(--light);
       }
+      .active  {
+        background-color: #2C3E50;
+        color: white;
+        padding: 10px;
+        border-radius: 8px;        
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
 
       .stats-panel {
         display: grid;
@@ -220,7 +227,7 @@
         background-color: #0056b3;
       }
     </style>
-    <script src="js/login.js" defer></script>
+    <script src="js/checuser.js" defer></script>
   </head>
   <body>
     <div class="container">
@@ -229,9 +236,9 @@
       </header>
 
       <nav class="nav-menu">
-        <a href="/admin">Inicio</a>
-        <a href="/tickets" onclick="showView('ticketsView')">Tickets</a>
-        <a href="/users">Usuarios</a>
+        <a href="/">🏠Home </a>
+        <a href="/admin" class="active">🎫 Ticket </a>
+        <a href="/users"> 👤 Trabajadores </a>
       </nav>
 
       <section id="ticketsView" class="view">
@@ -402,7 +409,7 @@
 
         assignTicket(id) {
           const dialog = document.createElement("dialog");
-          fetch("/workers/users", {
+          fetch("/workers/workers", {
             method: "GET",
             headers: {
               "Content-Type": "application/json",

@@ -1,3 +1,14 @@
+function logout() {
+  sessionStorage.removeItem("token");
+  window.location.href = "/";
+}
+function checkToken() {
+  if (sessionStorage.getItem("token")) {
+    window.location.href = "/admin";
+  }
+}
+checkToken();
+
 function login() {
   const email = document.getElementById("login-email").value;
   const password = document.getElementById("login-password").value;
@@ -24,7 +35,7 @@ function login() {
           sessionStorage.setItem("token", data.token);
 
           setInterval(() => {
-            window.location.href = "/tickets";
+            window.location.href = "/admin";
           }, 3000);
         }
         showNotification("Success", data.message, "success");
@@ -94,7 +105,7 @@ function toggleForm() {
       element.classList.toggle("hidden");
     }
   });
- 
+
   if (login[0].classList.contains("hidden")) {
     toggle.innerHTML = `  <p id="toggel">Ya tienes cuenta <a href="#" onclick="toggleForm()">entra</a></p>`;
   } else {

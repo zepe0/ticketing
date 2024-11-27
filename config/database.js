@@ -26,7 +26,7 @@ db.connect = async () => {
       rol INTEGER DEFAULT 0
     )
   `);
-  /*  FOREIGN KEY (uid) REFERENCES user(uid) */
+  
   await db.execute(`
     CREATE TABLE IF NOT EXISTS tickets (
       uid TEXT PRIMARY KEY ,
@@ -37,8 +37,21 @@ db.connect = async () => {
       estado TEXT NOT NULL,
       prioridad TEXT NOT NULL,
       asignado TEXT,
-      titulo TEXT
+      titulo TEXT,      
+      FOREIGN KEY (asignado) REFERENCES worker(uid)
   
+    )
+  `);
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS worker (
+      uid TEXT PRIMARY KEY ,
+      nombre TEXT ,
+      apellido TEXT ,
+      email TEXT UNIQUE NOT NULL,
+      pws TEXT NOT NULL,
+      rol INTEGER DEFAULT 2,
+      departamento TEXT,
+      avatar TEXT
     )
   `);
   const uid = generateUID();

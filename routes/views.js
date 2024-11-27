@@ -1,7 +1,7 @@
 import express from "express";
 const router = express();
 import path from "path";
-import { fileURLToPath } from "url";
+
 
 router.get("/login", (req, res) =>
   res.sendFile(process.cwd() + "/client/index.html")
@@ -12,9 +12,7 @@ router.get("/", (req, res) =>
 router.get("/admin", (req, res) =>
   res.sendFile(process.cwd() + "/client/admin.html")
 );
-router.get("/tickets", (req, res) =>
-  res.sendFile(process.cwd() + "/client/tickets.html")
-);
+
 router.get("/users", (req, res) =>
   res.sendFile(process.cwd() + "/client/usuarios.html")
 );
