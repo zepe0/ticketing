@@ -20,10 +20,9 @@ function login() {
       if (data.error) {
         showNotification("Error", data.error, "error");
       } else {
-       
         if (data.token) {
           sessionStorage.setItem("token", data.token);
-         
+
           setInterval(() => {
             window.location.href = "/tickets";
           }, 3000);
@@ -95,9 +94,10 @@ function toggleForm() {
       element.classList.toggle("hidden");
     }
   });
+ 
   if (login[0].classList.contains("hidden")) {
-    toggle.innerHTML = ` <p id="toggel"> No tienes cuenta <a href="#" onclick="toggleForm()">registrarte</a></p>`;
-  } else {
     toggle.innerHTML = `  <p id="toggel">Ya tienes cuenta <a href="#" onclick="toggleForm()">entra</a></p>`;
+  } else {
+    toggle.innerHTML = ` <p id="toggel"> No tienes cuenta <a href="#" onclick="toggleForm()">registrarte</a></p>`;
   }
 }

@@ -128,7 +128,6 @@
         background: var(--warning);
         color: white;
         padding: 4px;
-       
       }
 
       .status-cerrado {
@@ -381,10 +380,9 @@
           const today = new Date().toLocaleDateString();
 
           const resolvedToday = this.tickets.filter(
-            (t) =>
-              t.estado === "cerrado" &&
-              new Date().toLocaleDateString() === today
+            (t) => t.estado === "cerrado" && t.fecha_resuelto === today
           ).length;
+
           document.getElementById("resolvedToday").textContent = resolvedToday;
         }
 
