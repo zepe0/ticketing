@@ -6,7 +6,9 @@ async function Upd_status(data) {
   let fecha_Actual;
   const new_status = data.estado === "abierto" ? "cerrado" : "abierto";
   if (new_status === "cerrado") {
-    fecha_Actual = new Date().toISOString().slice(0, 19).replace("T", " ");
+    fecha_Actual = new Date( ).toISOString().slice(0, 10).split('-').reverse().join('/');;
+
+    debugger
   }else{
 
     fecha_Actual = null;

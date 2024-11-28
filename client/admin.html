@@ -55,11 +55,11 @@
       .nav-menu a:hover {
         color: var(--light);
       }
-      .active  {
-        background-color: #2C3E50;
+      .active {
+        background-color: #2c3e50;
         color: white;
         padding: 10px;
-        border-radius: 8px;        
+        border-radius: 8px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
 
@@ -382,13 +382,14 @@
           document.getElementById("openTickets").textContent =
             this.tickets.filter((t) => t.estado === "abierto").length;
           document.getElementById("highPriority").textContent =
-            this.tickets.filter((t) => t.prioridad === "alta").length;
+            this.tickets.filter((t) => t.prioridad === "high").length;
 
           const today = new Date().toLocaleDateString();
 
           const resolvedToday = this.tickets.filter(
             (t) => t.estado === "cerrado" && t.fecha_resuelto === today
           ).length;
+         
 
           document.getElementById("resolvedToday").textContent = resolvedToday;
         }
@@ -547,7 +548,6 @@
               </div>
               <div class="admin-actions">
                 <button
-
                   data-ticket-id=${ticket.uid}
                   class="btn btn-small toggle-status"
                   style="background: ${

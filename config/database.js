@@ -26,7 +26,7 @@ db.connect = async () => {
       rol INTEGER DEFAULT 0
     )
   `);
-  
+
   await db.execute(`
     CREATE TABLE IF NOT EXISTS tickets (
       uid TEXT PRIMARY KEY ,
@@ -38,6 +38,7 @@ db.connect = async () => {
       prioridad TEXT NOT NULL,
       asignado TEXT,
       titulo TEXT,      
+      fecha_resuelto date,
       FOREIGN KEY (asignado) REFERENCES worker(uid)
   
     )
