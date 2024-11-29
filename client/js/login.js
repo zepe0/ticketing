@@ -2,12 +2,7 @@ function logout() {
   sessionStorage.removeItem("token");
   window.location.href = "/";
 }
-function checkToken() {
-  if (sessionStorage.getItem("token")) {
-    window.location.href = "/admin";
-  }
-}
-checkToken();
+
 
 function login() {
   const email = document.getElementById("login-email").value;
@@ -43,6 +38,7 @@ function login() {
     })
     .catch((error) => {
       console.error("Error:", error);
+      showNotification("Error", error, "error");
     });
 }
 

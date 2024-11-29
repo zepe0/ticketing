@@ -1,13 +1,15 @@
+import { json } from "express";
 import { db } from "../config/database.js";
 
-async function All_workers(user) {
+async function worker_ticket(user) {
   let result;
-  
+  user = JSON.parse(atob(user.split(".")[1]));
+
   try {
     result = await db.execute({
-      sql: "select nombre from user where rol = :rol",
+      sql: "select * from tickets where asignado = :rol",
       args: {
-        rol: 1,
+        rol: user.id,
       },
     });
 
@@ -28,4 +30,4 @@ async function All_workers(user) {
     throw error;
   }
 }
-export default All_workers;
+export default worker_ticket;

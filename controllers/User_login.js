@@ -11,7 +11,7 @@ async function User_login(user) {
       throw new Error("Email o contraseña no definidos");
     }
     result = await db.execute({
-      sql: "Select pws , email from user Where email = :email and pws = :pws",
+      sql: "Select pws , email ,uid ,rol from user Where email = :email and pws = :pws",
       args: {
         email: user.email,
         pws: user.password,
@@ -23,13 +23,14 @@ async function User_login(user) {
     } else {
       const token = jwt.sign(
         {
-          email: user.email,
-          nombre: user.nombre,
-          id: user.uid,
-          rol: 0,
+          email: result.rows[0].email,
+          nombre: result.rows[0].nombre,
+          id: result.rows[0].uid,
+          rol: result.rows[0].rol,
         },
         process.env.JWT_SECRET
       );
+      debugger
       return token;
     }
   } catch (error) {
