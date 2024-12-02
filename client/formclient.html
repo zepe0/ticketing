@@ -149,24 +149,36 @@
         background: var(--success);
         color: white;
       }
+
+      .captcha {
+        font-size: 18px;
+        font-weight: bold;
+        background-color: #f2f2f2;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+      }
+      button:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
     </style>
-        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="js/captcha.js" defer></script>
   </head>
   <body>
     <div class="container">
       <header class="header">
         <h1>Sistema de Tickets de Soporte</h1>
-
       </header>
       <nav class="nav-menu">
         <a href="/">Inicio</a>
-        <a href="/login">Login</a>     
+        <a href="/login">Login</a>
       </nav>
 
       <section class="ticket-form">
         <h2>Crear Nuevo Ticket</h2>
         <form id="newTicketForm">
-          <div class="g-recaptcha" data-sitekey="your_site_key"></div>
           <div class="form-group">
             <label for="title">Título</label>
             <input
@@ -215,17 +227,31 @@
                 placeholder="tickets@gmail.com"
               />
             </div>
-          <button type="submit" class="btn">Crear Ticket</button>
+            <div class="captcha-container">
+              <label> captcha </label>
+              <div class="captcha" id="captcha"></div>
+              <button
+                type="button"
+                onclick="generateCaptcha()"
+                style="margin-top: 10px"
+              >
+                Actualizar
+              </button>
+            </div>
+
+            <label for="captchaInput">Introduce el CAPTCHA:</label>
+            <input type="text" id="captchaInput" required />
+            <button type="submit" class="btn" id="btn" disabled>
+              Crear Ticket
+            </button>
+          </form>
         </form>
       </section>
-
-    
     </div>
 
     <script>
       class TicketSystem {
         constructor() {
-          
           this.form = document.getElementById("newTicketForm");
           this.ticketsList = document.getElementById("ticketsList");
 
@@ -233,29 +259,31 @@
         }
 
         init() {
-       
           this.form.addEventListener("submit", (e) => this.handleSubmit(e));
-         
         }
-
-  
-
 
         handleSubmit(e) {
           e.preventDefault();
+          const userInput = document.getElementById("captchaInput").value;
 
-          const ticket = {
-            titulo: document.getElementById("title").value,
-            des: document.getElementById("description").value,
-            prioridad: document.getElementById("priority").value,
-            departamento: document.getElementById("department").value,
-            email: document.getElementById("email").value,
-            estado: "open",
-          };
-
-         
+          if (userInput !== currentCaptcha) {
+            e.preventDefault();
+            alert("CAPTCHA incorrecto. Por favor, inténtalo de nuevo.");
+            generateCaptcha();
+            document.getElementById("captchaInput").value = "";
+            return;
+          } else {
+            const ticket = {
+              titulo: document.getElementById("title").value,
+              des: document.getElementById("description").value,
+              prioridad: document.getElementById("priority").value,
+              departamento: document.getElementById("department").value,
+              email: document.getElementById("email").value,
+              estado: "open",
+            };
+          }
           this.saveTickets(ticket);
-          
+
           this.form.reset();
         }
 
@@ -275,12 +303,33 @@
             .catch((error) => {
               console.error("Error:", error);
             });
-        }   
+        }
       }
+      const userInput = document.getElementById("captchaInput");
+      userInput.addEventListener("copy", (e) => {
+        e.preventDefault();
+        alert("No puedes copiar el texto en este campo.");
+      });
 
-       
-        
-      
+      userInput.addEventListener("paste", (e) => {
+        e.preventDefault();
+        alert("No puedes pegar texto en este campo.");
+      });
+
+      userInput.addEventListener("cut", (e) => {
+        e.preventDefault();
+        alert("No puedes cortar texto en este campo.");
+      });
+      userInput.addEventListener("input", () => {
+        const value = userInput.value;
+        console.log("value", value);
+        if (value === currentCaptcha) {
+          userInput.style.borderColor = "green";
+          document.getElementById("btn").disabled = false;
+        } else {
+          userInput.style.borderColor = "red";
+        }
+      });
 
       const ticketSystem = new TicketSystem();
     </script>

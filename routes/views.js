@@ -25,6 +25,12 @@ router.get("/1", (req, res) =>
 router.get("/download", (req, res) =>
   res.sendFile(process.cwd() + "/client/download.html")
 );
+router.get("/trabajadores", (req, res) =>
+  res.sendFile(process.cwd() + "/client/Trabajadores.html")
+);
+router.get("/userticket", (req, res) =>
+  res.sendFile(process.cwd() + "/client/User_tickets.html")
+);
 
 router.use(
   "/client/css",

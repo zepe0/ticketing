@@ -3,11 +3,16 @@ function logout() {
   window.location.href = "/";
 }
 
+const token = sessionStorage.getItem("token");
+if (token) {
+  window.location.href = "/admin";
+}
 
 function login() {
   const email = document.getElementById("login-email").value;
   const password = document.getElementById("login-password").value;
   const user = { email, password };
+
   fetch("/login", {
     method: "POST",
     headers: {
@@ -37,7 +42,6 @@ function login() {
       }
     })
     .catch((error) => {
-      console.error("Error:", error);
       showNotification("Error", error, "error");
     });
 }
@@ -77,6 +81,7 @@ function showNotification(title, message, type) {
   const notificationContainer = document.getElementById(
     "notification-container"
   );
+
   const notification = document.createElement("div");
   notification.classList.add("notification", type);
   notification.innerHTML = `<strong>${title}</strong>: ${message}`;

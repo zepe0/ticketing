@@ -2,6 +2,10 @@ const token = sessionStorage.getItem("token");
 if (!token) {
   window.location.href = "/login";
 }
+
+if (JSON.parse(atob(token.split(".")[1])).rol == 1) {
+  window.location.href = "/";
+}
 document.getElementById("nombre_trabajador").innerHTML = JSON.parse(
   atob(token.split(".")[1])
 ).email;

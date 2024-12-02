@@ -74,6 +74,22 @@ router.get("/mytickets", async (req, res) => {
 
     .catch((error) => res.json({ error: error.message }));
 });
+router.get("/myticketsUser", async (req, res) => {
+  var token = req.headers;
+  await All_tickets(token)
+    .then((result) => {
+      const data = result.rows.map((row) => {
+        let rowData = {};
+        result.columns.forEach((column, i) => {
+          rowData[column] = row[i];
+        });
+        return rowData;
+      });
+      res.json(data);
+    })
+
+    .catch((error) => res.json({ error: error.message }));
+});
 
 router.delete("/delticket", async (req, res) => {
   var token = req.headers;
