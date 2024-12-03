@@ -239,6 +239,9 @@
       if (tokenData.rol === 2) {
         window.location.href = "/trabajadores";
       }
+      if (tokenData.rol === 1) {
+        window.location.href = "/userticket";
+      }
     </script>
   </head>
   <body>
@@ -346,7 +349,7 @@
             .then((res) => res.json())
             .then((data) => {
               this.tickets = data;
-              console.log(this.tickets);
+              
               this.renderTickets();
               this.updateStats();
             });

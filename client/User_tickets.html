@@ -335,7 +335,7 @@
             .then((res) => res.json())
             .then((data) => {
               this.tickets = data;
-              console.log(this.tickets);
+              
               this.renderTickets();
               this.updateStats();
             });
