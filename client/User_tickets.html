@@ -382,7 +382,7 @@
             this.tickets.filter((t) => t.prioridad === "high").length;
           const options = { day: "2-digit", month: "2-digit", year: "numeric" };
           const today = new Date().toLocaleDateString("es-ES", options);
-      
+
           const resolvedToday = this.tickets.filter(
             (t) => t.estado === "cerrado" && t.fecha_resuelto === today
           ).length;
@@ -557,36 +557,12 @@
                       : "Reabrir Ticket"
                   }
                 </button>
-                ${
-                  ticket.estado === "cerrado"
-                    ? ` <button
-                  onclick="adminTicketSystem.assignTicket(${ticket.uid})"
-                   data-ticket-id= "${ticket.uid}"
-                  class=" hidden">
-                  Asignar
-                </button>
-                <button
-                data= "${ticket.uid}"
-
-                  class=" hidden">
-                  Eliminar1
-                </button>
-              </div>
-            </div>`
-                    : ` <button
-                  onclick="adminTicketSystem.assignTicket(${ticket.uid})"
-                  class="btn btn-small btn-assign "
-                  data-ticket-id="${ticket.uid}">
-                  Asignar
-                </button>
+            
                 <button
                 data-ticket-id= "${ticket.uid}"
                   class="btn btn-small btn-delete ">
                   Eliminar
-                </button>
-              </div>
-            </div>`
-                }`
+                </button>`
             )
             .join("");
         }

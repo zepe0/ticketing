@@ -40,8 +40,8 @@ db.connect = async () => {
       titulo TEXT,      
       fecha_resuelto date,
       creado_por TEXT,
-      FOREIGN KEY (asignado) REFERENCES worker(uid),
-      FOREIGN KEY (creado_por) REFERENCES user(uid)
+      FOREIGN KEY (asignado) REFERENCES worker(uid)
+     
   
     )
   `);

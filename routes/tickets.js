@@ -3,6 +3,8 @@ import All_tickets from "../controllers/All_tickets.js";
 import New_tickets from "../controllers/New_tickets.js";
 import Del_tickets from "../controllers/Del_tickets.js";
 import Upd_status from "../controllers/Upd_status.js";
+import All_tickets_User from "../controllers/All_tickets_User.js";
+import { decode } from "jsonwebtoken";
 const router = express();
 
 router.get(
@@ -43,7 +45,6 @@ router.post(
 router.post(
   "/status",
   async (req, res) =>
-    
     await Upd_status(req.body)
       .then((result) => {
         const data = result.rows.map((row) => {
@@ -60,6 +61,7 @@ router.post(
 );
 router.get("/mytickets", async (req, res) => {
   var token = req.headers;
+
   await All_tickets(token)
     .then((result) => {
       const data = result.rows.map((row) => {
@@ -75,8 +77,12 @@ router.get("/mytickets", async (req, res) => {
     .catch((error) => res.json({ error: error.message }));
 });
 router.get("/myticketsUser", async (req, res) => {
-  var token = req.headers;
-  await All_tickets(token)
+  var token = req.headers.authorization; 
+  token = token.split(" ")[1];
+  token = decode(token);
+  token = token.email;
+
+  await All_tickets_User(token)
     .then((result) => {
       const data = result.rows.map((row) => {
         let rowData = {};

@@ -1,13 +1,13 @@
 import { db } from "../config/database.js";
 
-
 async function All_tickets_user(user) {
   let result;
-
+  user;
+  debugger;
   try {
     result = await db.execute({
-      sql: "select * from tickets w",
-      args: {},
+      sql: "select * from tickets where email = :user",
+      args: { user },
     });
     return result;
   } catch (error) {

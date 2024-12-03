@@ -13,7 +13,7 @@ function RenderNav() {
   const Trabajador = document.getElementById("Trabajador");
   const mistickets = document.getElementById("mistickets");
   const misticketsUser = document.getElementById("misticketsUser");
-  debugger;
+
   if (path === "/") {
     home.classList.add("active");
   } else if (path === "/admin") {
