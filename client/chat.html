@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chat</title>
+    <link rel="stylesheet" href="css/chat.css" />
+    <script src="js/chatbot.js" type="module " defer></script>
     <script type="module">
       import { io } from "https://cdn.socket.io./4.3.2/socket.io.esm.min.js";
       const socket = io();
@@ -20,6 +22,7 @@
         e.preventDefault();
 
         if (input.value) {
+          
           socket.emit("chat", input.value);
           input.value = "";
         }
@@ -117,5 +120,9 @@
         <button type="submit">Enviar</button>
       </form>
     </section>
+    <form id="fomrchat">
+      <input type="text" id="prompo" />
+      <button type="submit">Enviar</button>
+    </form>
   </body>
 </html>

@@ -20,7 +20,7 @@ router.get("/newticket", (req, res) =>
   res.sendFile(process.cwd() + "/client/formclient.html")
 );
 router.get("/1", (req, res) =>
-  res.sendFile(process.cwd() + "/client/register.html")
+  res.sendFile(process.cwd() + "/client/chat.html")
 );
 router.get("/download", (req, res) =>
   res.sendFile(process.cwd() + "/client/download.html")

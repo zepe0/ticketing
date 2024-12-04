@@ -14,7 +14,6 @@ import User_login from "./controllers/User_login.js";
 import tickets from "./routes/tickets.js";
 import workers from "./routes/workers.js";
 
-
 loadEnv();
 
 const port = process.env.PORT ?? 3000;
@@ -73,4 +72,42 @@ app.use(
 
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
+});
+import { GoogleGenerativeAI } from "@google/generative-ai";
+let history = ""
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+/* const countResult = await model.countTokens(
+  "The quick brown fox jumps over the lazy dog.",
+);
+const prompt = "cuantos tokens tengo en mi cuenta"; */
+const chat = model.startChat({
+  history: [
+    {
+      role: "user",
+      parts: [{ text: "qeu actividaad puedo hacer hoy" }],
+    },
+    {
+      role: "model",
+      parts: [{ text: "que te gusta hacer" }],
+    },
+  ],
+  generationConfig: {
+    maxOutputTokens: 100,
+  },
+});
+
+const msg = "";
+
+const result = await chat.sendMessage(msg);
+const response = await result.response;
+const text = response.text();
+console.log(text);
+
+/* const result = await model.generateContent(prompt); */
+/* console.log(result.response.text()); */
+
+chat._history.forEach((msg) => {
+  console.log(msg);
 });
